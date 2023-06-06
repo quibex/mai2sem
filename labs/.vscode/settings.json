@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "stdio.h": "c",
+        "mylist.h": "c",
+        "stdbool.h": "c",
+        "string.h": "c",
+        "int_dque.h": "c",
+        "lexema.h": "c",
+        "lexeme_que.h": "c",
+        "lexeme_stack.h": "c",
+        "cctype": "c",
+        "lexeme.h": "c"
+    }
+}

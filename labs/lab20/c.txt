@@ -1,0 +1,12 @@
+int
+main (  )
+{
+  int a, b;
+  a = 1000;
+  b = 7;
+  c = a - b;
+  printf ( "%d", c );
+  return 777;
+}
+
+

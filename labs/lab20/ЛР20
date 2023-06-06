@@ -1,0 +1,1742 @@
+Стандартные утилиты UNIX для обработки файлов
+
+Двойные, одинарные кавычки – не входят в аргумент, косая черта и знак $ (имя переменной будет заменено ее значением)
+Одиночная кавычка в Shell игнорирует все типы специальных символов в ней. Все, что находится в одинарных кавычках, считается одним элементом.
+Обычно, когда оболочка видит первую одинарную кавычку, она игнорирует любые специальные символы (пробел также является специальным символом), пока не найдет другую одинарную кавычку (закрывающие кавычки).
+Двойные кавычки работают почти так же, как одинарные. Почти потому, что они также склонны игнорировать все специальные символы, кроме:
+•	Знаки доллара $
+•	Обратные цитаты ` (используются в баше для записи какой-то выполнимой команды, как $() )
+•	Обратная косая черта \ (символ, за которым следует обратная косая черта, потеряет свое особое значение)
+
+
+kuban:~$ I="Kate"
+kuban:~$ echo "$I" //имя переменной заменяется значением и выводится
+Kate
+kuban:~$ echo '$I' 
+$I
+kuban:~$ echo "''""$I"'$I'"\ Kate"'\ '
+''Kate$I\ Kate\
+
+kuban:~$ echo "'hi'"
+'hi'
+kuban:~$ echo \$I //игнорируется $
+$I
+
+kuban:~$ echo " \ hello"
+ \ hello
+kuban:~$ echo hello\me
+hellome
+kuban:~$ echo hello\ me //таким образом можно выводить пробелы
+hello me
+
+Присваивание значений, вывод элементов строк и некоторых свойств
+
+kuban:~$ I="Kate"
+kuban:~$ echo "${#I}" //длина слова Kate
+4
+kuban:~$ echo "${I:2}" //вывод части слова, кроме первых двух букв
+te
+kuban:~$ echo "${I:1}"
+ate
+kuban:~$ L=$((${#I}/2)) //половина от длины слова
+kuban:~$ echo "$L"
+2
+
+kuban:~$ v=ttgitgit
+kuban:~$ echo ${v%%g*t} //убрать справа набор букв удовлетворяющих условию, до последнего вхождения включительно
+tt
+kuban:~$ echo ${v%g*t} //убрать справа первое вхождение
+ttgit
+kuban:~$ echo ${v##g*t} //убрать слева
+ttgitgit
+kuban:~$ v=gitgittt
+kuban:~$ echo ${v##g*t}
+kuban:~$ echo ${v#g*t}
+gittt
+kuban:~$ v=gitgitoo //сколько аргументов?
+kuban:~$ echo ${v##g*t}
+oo
+
+kuban:~$ basename me/dcskl.txt  //оставить только имя файла
+dcskl.txt
+kuban:~$ dirname new/me/dcskl.txt //оставить путь к родительской директории
+new/me
+kuban:~$ dirname "$F" //если значение F – это имя файла
+.
+kuban:~$ basename "$F" 
+mybooksfile.txt
+
+MKTEMP
+Создание уникального файла (создание файла с уникальным именем)
+/tmp — это каталог, в котором хранятся временные файлы необходимые для запущенного программного обеспечения и приложений работающих в системе.
+kuban:~$ mktemp
+/tmp/tmp.UfGHRnLb2l
+kuban:~$ mktemp -d //создание уникальной  директории
+/tmp/tmp.z9Kw02d5qm
+kuban:/tmp$ ls
+hsperfdata_kateland  hsperfdata_root  mc-kateland  tmp.UfGHRnLb2l  tmp.z9Kw02d5qm
+kuban:/tmp$ ls > "$(mktemp)" //вписали в созданный mktemp файл , удалив содержимое)
+kuban:/tmp$ ls
+hsperfdata_kateland  hsperfdata_root  mc-kateland  tmp.UfGHRnLb2l  tmp.rBXdrtMwTS  tmp.z9Kw02d5qm
+kuban:/tmp$ cat tmp.rBXdrtMwTS //вывод текста из файла
+hsperfdata_kateland
+hsperfdata_root
+mc-kateland
+tmp.UfGHRnLb2l
+tmp.rBXdrtMwTS
+tmp.z9Kw02d5qm
+
+
+CMP
+cmp - Сравнение двух файлов байт за байтом
+cmp можно использовать в конструкциях if (cmp  … ); then …
+kuban:~$ ls > a.1
+kuban:~$ ls > a.2
+kuban:~$ ls >> a.2 //дописать в a.2
+kuban:~$ cmp a.1 a.2 //выводит различия
+cmp: EOF on a.1 after byte 85, line 11
+kuban:~$ cmp a.2 a.1
+cmp: EOF on a.1 after byte 85, line 11
+kuban:~$ cat a.1
+0
+a.1
+a.2
+desktop
+f
+f.tgz
+f1
+f2
+fileout.txt
+kkk.5.10.16.3-microsoft-standard-WSL2
+me
+kuban:~$ ls > a.1
+kuban:~$ cmp a.2 a.1
+cmp: EOF on a.1 after byte 85, line 11
+kuban:~$ cat a.1
+0
+a.1
+a.2
+desktop
+f
+f.tgz
+f1
+f2
+fileout.txt
+kkk.5.10.16.3-microsoft-standard-WSL2
+me
+kuban:~$ ls > a.2
+kuban:~$ cmp a.2 a.1 //сравнение одинаковых файлов
+kuban:~$
+
+DIFF
+diff - сравнение файлов строка за строкой
+•	c — CHANGE — изменение, которое нужно внести в указанной строке первого файла
+•	d — DELETE — то, что нужно удалить в первом файле
+•	a — ADD — то, что нужно добавить в первый файл
+Символ < в выводе diff указывает на первый файл, а > — на второй.
+kuban:~$ diff a.1 a.2
+11a12,22 //куда и что надо добавить
+> 0
+> a.1
+> a.2
+> desktop
+> f
+> f.tgz
+> f1
+> f2
+> fileout.txt
+> kkk.5.10.16.3-microsoft-standard-WSL2
+> me
+kuban:~$ cat a.1 
+0
+a.1
+a.2
+desktop
+f
+f.tgz
+f1
+f2
+fileout.txt
+kkk.5.10.16.3-microsoft-standard-WSL2
+me
+
+kuban:~$ cat a.2
+0
+a.1
+a.2
+desktop
+f
+f.tgz
+f1
+f2
+fileout.txt
+kkk.5.10.16.3-microsoft-standard-WSL2
+me
+0
+a.1
+a.2
+desktop
+f
+f.tgz
+f1
+f2
+fileout.txt
+kkk.5.10.16.3-microsoft-standard-WSL2
+me
+
+
+kuban:~$ echo "file1 or 1" > a.1
+kuban:~$ echo "file2 or 2" > a.2
+kuban:~$ diff a.1 a.2
+1c1 //необходимо заменить первую строку в первом файле
+< file1 or 1
+---
+> file2 or 2
+
+kuban:~$ echo -e "привет \n привет" > a.2
+kuban:~$ echo -e " \n привет" > a.1
+kuban:~$ diff a.1 a.2
+1c1
+<
+---
+> привет
+kuban:~$ echo -e "привет \n привет" > a.1
+kuban:~$ echo -e "привет \n привет\n прп" > a.2
+kuban:~$ diff a.1 a.2
+2a3 //добавить третью строку из второго файла
+>  прп
+
+
+
+TAIL
+tail - вывод последней части файлов.
+Распечатайте по умолчанию последние 10 строк каждого файла на стандартном выходе. 
+Если файла нет (ввод tail) или - , прочитайте стандартный ввод.
+
+kuban:~$ echo "hhlgl">>a.1
+kuban:~$ echo "hhlgl">>a.1
+kuban:~$ echo "hhlgl">>a.1
+kuban:~$ tail -4 a.1 //вывод 4-х последних строк
+file1 or 2
+hhlgl
+hhlgl
+hhlgl
+
+
+OD
+od - дамп файлов в восьмеричном и других форматах
+Запишите однозначное представление, по умолчанию восьмеричные байты, ФАЙЛА в стандартный вывод.  С несколькими аргументами FILE объедините их в указанном порядке, чтобы сформировать входные данные.
+Превращает файлы в другие форматы. Программа конвертор.
+kuban:~$ cat a.1
+file1 or 1
+file1 or 2
+hhlgl
+hhlgl
+hhlgl
+kuban:~$ od a.1
+0000000 064546 062554 020061 071157 030440 063012 066151 030545
+0000020 067440 020162 005062 064150 063554 005154 064150 063554
+0000040 005154 064150 063554 005154
+0000050
+
+kuban:~$ od -c a.1    //ASCII код
+0000000   f   i   l   e   1       o   r       1  \n   f   i   l   e   1
+0000020       o   r       2  \n   h   h   l   g   l  \n   h   h   l   g
+0000040   l  \n   h   h   l   g   l  \n
+0000050
+
+VI/VIM
+vim - Vi IMproved, текстовый редактор программиста.
+Его можно использовать для редактирования всех видов обычного текста.
+
+ED
+ed - строкоориентированный текстовый редактор. Он используется для создания, отображения, изменения и иного манипулирования текстовыми файлами, как в интерактивном режиме, так и с помощью сценариев оболочки. Ограниченная версия ed, red, может редактировать файлы только в текущем каталоге и не может выполнять команды оболочки. Ed является «стандартным» текстовым редактором в том смысле, что он является оригинальным редактором для Unix и, следовательно, широко доступен.  Однако для большинства целей он заменяется полноэкранными редакторами, такими как GNU Emacs или GNU Moe.
+
+kuban:~$ ed
+a //начало ввода 
+привет
+это редактор и текст
+много текста
+текст вводится до точки
+а позволяет начать ввод
+если изменения не записываются в файл появляется знак вопроса
+выделяется область памяти - буфер
+. //конец ввода
+1,$p // посмотреть содержимое буфера. (1,$ задают диапазон строк, которые надо напечатать (p от print): 1 — первая строка, $ — последняя строка)
+привет
+это редактор и текст
+много текста
+текст вводится до точки
+а позволяет начать ввод   //добавление текста в буфер
+если изменения не записываются в файл появляется знак вопроса
+выделяется область памяти - буфер
+
+kuban:~$ cat a.2
+file2 or 2
+hello
+kuban:~$ ed a.2
+17
+a //дописать в файл
+приет
+.
+w //сохранить изменения, запись в файл
+28 //размер в байтах
+q //выйти
+kuban:~$ cat a.2
+file2 or 2
+hello
+приет
+
+Если изменения не были записаны в файл, ed предупредит об этом
+?
+kuban:~$ ed a.2
+28
+.=    //текущая строка
+3     //номер строки
+1p   //вывод первой строки
+file2 or 2
+.=
+1
+
+
+HEAD
+head - вывод первой части файлов. Распечатайте первые 10 строк каждого файла на стандартный вывод.
+
+kuban:~$ head -4 a.1
+file1 or 1
+file1 or 2
+hhlgl
+hhlgl
+
+kuban:~$ ed
+e a.1  //считывание содержимого файла в буфер
+40
+4,$d  //удаление с 4 по последнюю строку
+2s/1/4/   //замена во второй строке цифры 1 на 4
+w
+28
+q
+kuban:~$ cat a.1
+file1 or 1
+file4 or 2
+hhlgl
+
+
+DU
+du - оценка использования файлового пространства. 
+
+kuban:~$ du -h me //-h, --human-readable - выводить размер в единицах измерения удобных для человека;
+
+4.0K    me/t
+8.0K    me/myd
+44K     me
+kuban:~$ du -ha me // -a, --all - выводить размер для !всех! файлов в директории me, а не только для директорий, по умолчанию размер выводится только для папок
+4.0K    me/file.dos
+4.0K    me/lab9.c
+4.0K    me/file.txt
+4.0K    me/t
+4.0K    me/a.out:Zone.Identifier
+0       me/fileout.txt
+0       me/myd/g12.txt
+4.0K    me/myd/a1
+0       me/myd/a2
+0       me/myd/gww.txt
+0       me/myd/g.txt
+0       me/myd/gp.txt
+0       me/myd/g1.txt
+0       me/myd/a1k3
+0       me/myd/a2k4
+0       me/myd/a1k4
+0       me/myd/a2k3
+8.0K    me/myd
+12K     me/a.out
+44K     me
+
+
+XARGS
+xargs - построение и выполнение командных строк из стандартного ввода. xargs считывает элементы из стандартного ввода, разделенные пробелами (которые могут быть защищены двойными или одинарными кавычками или обратной косой чертой) или новыми строками, и выполняет команду (по умолчанию /bin/echo) один или несколько раз с любыми начальными аргументами, за которыми следуют элементы, считываемые из стандартного ввода.  Пустые строки на стандартном вводе игнорируются.
+
+Пример синтаксиса:
+$ первая_команда | xargs опции вторая_команда аргументы
+Сначала выполняется любая первая команда и весь её вывод по туннелю передается в xargs. Затем этот вывод разбивается на строки и для каждой строки вызывается вторая команда, а полученная строка передаётся ей в аргументах.
+если мы запустим xargs без параметров и наберем несколько слов, она просто их выведет.
+kuban:~$ xargs
+hello
+hello
+kuban:~$
+
+kuban:~$ xargs -t // -t – что происходит, по умолчанию выполняется команда echo и ей передается всё, что было прочитано из стандартного ввода.
+hello
+echo hello
+hello
+
+kuban:~$ ls me | xargs -t -L1 //сколько строк надо передать одной команде (по умолчанию echo)
+echo a.out
+a.out
+echo a.out:Zone.Identifier
+a.out:Zone.Identifier
+echo file.dos
+file.dos
+echo file.txt
+file.txt
+echo fileout.txt
+fileout.txt
+echo lab9.c
+lab9.c
+echo myd
+myd
+echo t
+t
+kuban:~$ ls me | xargs -L1
+a.out
+a.out:Zone.Identifier
+file.dos
+file.txt
+fileout.txt
+lab9.c
+myd
+t
+kuban:~$ ls me
+a.out  a.out:Zone.Identifier  file.dos  file.txt  fileout.txt  lab9.c  myd  t
+
+Удаление директорий и их содержимого -r, Игнорировать несуществующие файлы и аргументы. Никогда не выдавать запросы на подтверждение удаления -f.
+
+kuban:~$ ls me
+a.out  a.out:Zone.Identifier  file.dos  file.txt  fileout.txt  lab9.c  myd  rr  rt  t
+
+kuban:~/me$ find -name "*.txt" | xargs rm -rf
+
+kuban:~/me$ ls
+a.out  a.out:Zone.Identifier  file.dos  lab9.c  myd  rr  rt  t
+
+
+
+INDENT
+
+kuban:~/me$ touch c.txt
+kuban:~/me$ cat c.txt
+#include <stdio.h>
+
+int main(){
+inc c,g,h;
+c=0;
+g=0; h=5;
+printf("%d", h);
+return 0;
+}
+
+в стиле основателей языка C — Кернигана и Ритчи.
+
+kuban:~/me$ indent -kr c.txt
+kuban:~/me$ cat c.txt
+#include <stdio.h>
+ int main()
+{
+inc c, g, h;
+c = 0;
+g = 0;
+    h = 5;
+printf("%d", h);
+return 0;
+}
+
+-prs, --space-after-parentheses
+Поставьте пробел после каждого '(' и перед каждым ')'.
+
+kuban:~/me$ indent -prs c.txt
+kuban:~/me$ cat c.txt
+#include <stdio.h>
+ int
+main (  )
+{
+inc c, g, h;
+c = 0;
+g = 0;
+  h = 5;
+printf ( "%d", h );
+return 0;
+}
+
+COMM
+comm - сравнение двух отсортированных файлов строка за строкой
+
+kuban:~/me$ comm t1 t2 //сначала уникальные строки из первого файла, затем из второго и затем общие
+                10
+                20
+30
+40
+        50
+        60
+Для получения списка уникальных строк из файла деактивируем вывод строк из другого файла (с помощью параметра -1, если нам нужны строки из второго файла или -2, если из первого файла), а также вывод повторяющихся строк (с помощью параметра -3).
+
+kuban:~/me$ comm -2 t1 t2
+        10
+        20
+30
+40
+
+kuban:~/me$ comm -23 t1 t2
+30
+40
+
+
+GREP 
+grep – печать слов, соответствующих шаблонам
+
+kuban:~/me$ grep "10" t1
+10
+kuban:~/me$ grep "0" t1
+10
+20
+30
+40
+
+TEE
+tee - чтение со стандартного ввода и запись в стандартный вывод и файлы.
+Tee [ОПЦИЯ]... [ФАЙЛ]...
+Скопируйте стандартные входные данные в каждый ФАЙЛ, а также в стандартный вывод.
+
+Команда tee в Linux нужна для записи вывода любой команды в один или несколько файлов.
+-a или -append - Используется для записи вывода в конец существующего файла.
+
+kuban:~/me$ pwd | tee -a t1
+/home/kateland/me
+kuban:~/me$ cat t1
+10
+20
+30
+40
+/home/kateland/me
+
+kuban:~/me$ pwd | tee t1 //перезапись
+/home/kateland/me
+kuban:~/me$ cat t1
+/home/kateland/me
+
+kuban:~/me/myd$ pwd | tee a1 a2 a1k4
+/home/kateland/me/myd
+kuban:~/me/myd$ cat a1
+/home/kateland/me/myd
+
+kuban:~/me/myd$ pwd | tee a1 a2 a3 //a3 не было изначально
+/home/kateland/me/myd
+kuban:~/me/myd$ cat a3
+/home/kateland/me/myd
+
+
+MC
+mc - Midnight Commander — браузер каталогов/файловый менеджер для Unix-подобных операционных систем. Визуальная оболочка для Unix-подобных систем. Копирование, удаление, переименование/перемещение, создание директорий
+
+
+ 
+
+Midnight Commander - консольный файловый менеджер для Linux (rus-linux.net)
+
+
+AWK
+сканирование и обработка шаблонов.
+
+Синтаксис:
+$ awk опции 'условие {действие}'
+$ awk опции 'условие {действие} условие {действие}'
+kuban:~$ echo "Hello, UNIX, Yow ar u?" | awk '{print $4,$1}'
+ar Hello,
+kuban:~$ echo "Hello, UNIX, Yow ar u?" | awk '{print "Yoy, ", $4,$1}'
+Yoy,  ar Hello,
+kuban:~$ echo "Hello, UNIX, Yow ar u?" | awk -F"a" '{print  $4,$1}'
+ Hello, UNIX, Yow
+kuban:~$ echo "Hello, UNIX, Yow ar u?" | awk -F"l" '{print  $4,$1}'
+ He
+kuban:~$ echo "Hello, UNIX, Yow ar u?" | awk -F"l" '{print  $3,$1}'
+o, UNIX, Yow ar u? He
+kuban:~$ echo "Hello, UNIX, Yow ar u?" | awk -F"l" '{print  $2,$1}'
+ He
+kuban:~$ echo "Hello, UNIX, Yow ar u?" | awk '{print  $NF}' //последнее поле
+u?
+
+kuban:~$ echo -e "Hello, UNIX, \n  Yow ar u?" | awk '/ar/ {print  $(NF)}'  //вывод последнего поля в строке, которая содержит ar
+u?
+kuban:~$ echo -e "Hello, UNIX, \n  Yow ar u?" | awk '/,/ {print  $(NF)}'
+UNIX,
+kuban:~$ echo -e "Hello, UNIX, \n  Yow ar u?" | awk 
+'/ / {print  $(NF)}'
+UNIX,
+u?
+
+ICONV
+iconv - преобразование текста из одной кодировки символов в другую. Программа iconv читает текст в одной кодировке и выводит текст в другой кодировке.
+
+FILE
+file — определение типа файла.
+
+kuban:~$ ls
+a.1  a.2  desktop  f  f.tgz  f1  f2  kkk.5.10.16.3-microsoft-standard-WSL2  me
+kuban:~$ file a.1
+a.1: UTF-8 Unicode text
+kuban:~$ file -b a.1
+UTF-8 Unicode text
+kuban:~$ file a.1 a.2
+a.1: UTF-8 Unicode text
+a.2: UTF-8 Unicode text
+kuban:~$ file me
+me: directory
+
+-i, --mime — определение MIME-типа документа по его заголовку;
+Медиа тип (так же известный как Multipurpose Internet Mail Extensions или MIME тип) является стандартом, который описывает природу и формат документа, файла или набора байтов.
+kuban:~$ file -i a.1 
+a.1: text/plain; charset=utf-8
+
+
+DF – disk free.
+df - отчет об использовании дискового пространства файловой системой.
+посмотреть доступное пространство на всех примонтированных разделах и информацию о них
+
+kuban:~$ df
+Filesystem     1K-blocks      Used Available Use% Mounted on
+/dev/sdb       263174212   2138636 247597420   1% /
+none             1956092         4   1956088   1% /mnt/wsl
+tools          498905764 246265028 252640736  50% /init
+none             1954012         0   1954012   0% /dev
+none             1956092         0   1956092   0% /run
+none             1956092         0   1956092   0% /run/lock
+none             1956092         0   1956092   0% /run/shm
+none             1956092         0   1956092   0% /run/user
+tmpfs            1956092         0   1956092   0% /sys/fs/cgroup
+drivers        498905764 246265028 252640736  50% /usr/lib/wsl/drivers
+lib            498905764 246265028 252640736  50% /usr/lib/wsl/lib
+drvfs          498905764 246265028 252640736  50% /mnt/c
+kuban:~$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdb        251G  2.1G  237G   1% /
+none            1.9G  4.0K  1.9G   1% /mnt/wsl
+tools           476G  235G  241G  50% /init
+none            1.9G     0  1.9G   0% /dev
+none            1.9G     0  1.9G   0% /run
+none            1.9G     0  1.9G   0% /run/lock
+none            1.9G     0  1.9G   0% /run/shm
+none            1.9G     0  1.9G   0% /run/user
+tmpfs           1.9G     0  1.9G   0% /sys/fs/cgroup
+drivers         476G  235G  241G  50% /usr/lib/wsl/drivers
+lib             476G  235G  241G  50% /usr/lib/wsl/lib
+drvfs           476G  235G  241G  50% /mnt/c
+
+kuban:~$ df -h /dev/sdb  //-h, --human-readable (1024)
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdb        251G  2.1G  237G   1% /
+kuban:~$ df -h /dev
+Filesystem      Size  Used Avail Use% Mounted on
+none            1.9G     0  1.9G   0% /dev
+
+
+SPLIT
+split - разбить файл на части.
+
+kuban:~/me$ echo -e "Hello \n My dear \n my love \n you are \n cat with you \n hh \n heelloo" > a.1
+kuban:~/me$ ls
+a.1  a.out  a.out:Zone.Identifier  c.txt  c.txt~  file.dos  lab9.c  myd  rr  rt  t  t1  t2
+kuban:~/me$ cat a.1
+Hello
+ My dear
+ my love
+ you are
+ cat with you
+ hh
+ heelloo
+kuban:~/me$ split -l 3 a.1 //разбить на файлы с 3-мя строками
+kuban:~/me$ ls
+a.1  a.out  a.out:Zone.Identifier  c.txt  c.txt~  file.dos  lab9.c  myd  rr  rt  t  t1  t2  xaa  xab  xac
+kuban:~/me$ cat xaa
+Hello
+ My dear
+ my love
+kuban:~/me$ cat xac
+ heelloo
+
+
+kuban:~/me$ split -n 4 a.1 //разбить на 4 файла (-b разбить по размеру)
+kuban:~/me$ ls
+a.1  a.out  a.out:Zone.Identifier  c.txt  c.txt~  file.dos  lab9.c  myd  rr  rt  t  t1  t2  xaa  xab  xac  xad
+kuban:~/me$ cat xaa
+Hello
+ My dear
+kuban:~/me$ cat xab
+ my love
+ you
+kuban:~/me$ cat xac
+are
+ cat with y
+kuban:~/me$ cat xad
+ou
+ hh
+ heelloo
+
+
+WC
+wc - печать количество строк, слов и байтов для каждого файла.
+
+kuban:~/me$ cat a.1
+Hello
+ My dear
+ my love
+ you are
+ cat with you
+ hh
+ heelloo
+kuban:~/me$ wc a.1
+ 7 12 66 a.1
+
+kuban:~/me$ wc
+vlvh
+jkbjlv
+      2       2      12
+//введено строк, слов и байт
+
+
+TR
+tr - замещения или удаления символов из стандартного ввода, отправляя результат на стандартный вывод.
+
+kuban:~/me$ cat a.1
+Hello
+ My dear
+ my love
+ you are
+ cat with you
+ hh
+ heelloo
+kuban:~/me$ tr -s [:alpha:] < a.1 // -s  - замещать последовательность знаков, которые повторяются, на один такой знак, [:alpha:] - все буквы.
+Helo
+ My dear
+ my love
+ you are
+ cat with you
+ h
+ helo
+kuban:~/me$ tr l m < a.1 //замена l на m //сколько аргументов
+Hemmo
+ My dear
+ my move
+ you are
+ cat with you
+ hh
+ heemmoo
+
+kuban:~/me$ tr -d a < a.1 //удалить знак а
+Hello
+ My der
+ my love
+ you re
+ ct with you
+ hh
+ heelloo
+kuban:~/me$ tr l dg < a.1 //один знак l заменяется на один d
+Heddo
+ My dear
+ my dove
+ you are
+ cat with you
+ hh
+ heeddoo
+
+CUT
+cut – “вырезание” разделов из каждой строки файлов.
+
+kuban:~$ echo "hello nlnvl" | cut -b 4-5 //вырезать с 4 по 5 байт
+lo
+kuban:~$ cut -b 4-5 //со стандартного ввода
+ee
+
+erwf
+f
+
+ream,erlag
+m,
+
+kuban:~$ cd me
+kuban:~/me$ cut -b 4-5 a.1 //в каждой строке получить 4 и 5 байт
+lo
+ d
+ l
+u
+t
+
+el
+
+kuban:~/me$ cut -b -5 a.1 //в каждой строке получить байты с первого по пятый
+Hello
+ My d
+ my l
+ you
+ cat
+ hh
+ heel
+kuban:~/me$ cut -b 5- a.1 //с пятого по последний
+o
+dear
+love
+ are
+ with you
+
+lloo
+
+kuban:~/me$ cut -c 5- a.1 //символы
+o
+dear
+love
+ are
+ with you
+
+lloo
+
+kuban:~/me$ echo "Nice day for you" | cut -d " " -f 1,2 //если поменять местами цифры, то получится тоже самое, -f – перечень полей для вырезания, -d – пользователь устанавливает свой разделитель.
+Nice day
+
+
+PATCH
+patch - apply a diff file to an original
+Применение diff к оригиналу и новому файлу
+kuban:~/me$ cat code.c
+#include <stdio.h>
+
+int main(){
+  printf("code\n");
+}
+
+kuban:~/me$ cp code.c code2.c
+kuban:~/me$ nano code2.c
+kuban:~/me$ cat code2.c
+#include <stdio.h>
+
+int main(){
+  printf("code\n");
+  printf("New code");
+}
+
+kuban:~/me$ diff -u code.c code2.c > codefin.patch //запишем отличия в codefin.patch для работы команды patch, -u – генерация унифицированного контекстного патча
+kuban:~/me$ cat codefin.patch
+--- code.c      2023-02-19 16:47:32.906744970 +0500
++++ code2.c     2023-02-19 16:49:01.696746470 +0500
+@@ -2,4 +2,5 @@
+
+ int main(){
+   printf("code\n");
++  printf("New code");
+ }
+kuban:~/me$ patch < codefin.patch
+patching file code.c
+kuban:~/me$ cat code.c
+#include <stdio.h>
+
+int main(){
+  printf("code\n");
+  printf("New code");
+}
+
+PASTE
+paste - объединение строк файлов
+
+kuban:~/me$ echo -e "flsfm \n nfwnk;w" > a.2
+kuban:~/me$ cat a.2
+flsfm
+ nfwnk;w
+kuban:~/me$ cat a.1 a.2
+Hello
+ My dear
+ my love
+ you are
+ cat with you
+ hh
+ heelloo
+flsfm
+ nfwnk;w
+kuban:~/me$ paste a.1 a.2
+Hello   flsfm
+ My dear         nfwnk;w
+ my love
+ you are
+ cat with you
+ hh
+ heelloo
+
+//ключ -d позволяет сменить разделитель при объединении
+
+
+Подробный разбор утилит.
+
+SORT
+sort - сортировка строк текстовых файлов.
+Это утилита для вывода текстовых строк в определенном порядке. Проще говоря, для сортировки. Ее можно использовать для сортировки текста из одного или нескольких файлов или c помощью нее может быть выполнена сортировка вывода linux для какой-либо команды.
+
+•	Cтроки с цифрами размещаются выше других строк
+•	Строки, начинающиеся с букв нижнего регистра, размещаются выше
+•	Сортировка выполняется в соответствии алфавиту
+•	Строки сначала сортируются по алфавиту, а уже вторично по другим правилам.
+
+Если сорт не получает файл работает со стандартным вводом
+
+$ sort опции файл
+$ команда | sort опции
+Основные ключи утилиты sort.
+•	-d - использовать для сортировки только буквы и цифры
+•	-i - сортировать только по ASCII символах
+•	-n - сортировка строк linux по числовому значению
+•	-r - сортировать в обратном порядке
+•	-с - проверить был ли отсортирован файл
+•	-o - вывести результат в файл
+•	-u - игнорировать повторяющиеся строки
+•	-m - объединение ранее отсортированных файлов
+•	-k - указать поле по которому нужно сортировать строки, если не задано, сортировка выполняется по всей строке.
+•	-f - использовать в качестве разделителя полей ваш символ вместо пробела.
+•	-b - не учитывать пробелы
+
+kuban:~/me$ nano a.1
+kuban:~/me$ cat a.1
+aaaaa
+fffff
+BBB
+bbbb
+AAAAAAA
+ggggg
+hop
+lfdg;gls;
+///
+.
+
+kuban:~/me$ sort a.1
+
+.
+///
+AAAAAAA
+BBB
+aaaaa
+bbbb
+fffff
+ggggg
+hop
+lfdg;gls;
+
+kuban:~/me$ sort -r a.1 //обратная сортировка
+lfdg;gls;
+hop
+ggggg
+fffff
+bbbb
+aaaaa
+BBB
+AAAAAAA
+///
+.
+
+kuban:~/me$ nano a.1
+kuban:~/me$ sort -k2 a.1 //сортировка по столбцу номер 2 почему 10 идет после 1
+
+aaaaa 1
+. 10
+fffff 2
+bbbb 3
+AAAAAAA 4
+BBB 4
+ggggg 5
+hop 7
+lfdg;gls; 8
+/// 9
+kuban:~/me$ sort -nk2 a.1 //сортировка по числовому значению столбца номер 2
+
+aaaaa 1
+fffff 2
+bbbb 3
+AAAAAAA 4
+BBB 4
+ggggg 5
+hop 7
+lfdg;gls; 8
+/// 9
+. 10
+kuban:~/me$ nano a.1
+kuban:~/me$ sort -u a.1 //сортировка без повторений
+
+. 10
+/// 9
+AAAAA 1
+AAAAAAA 4
+BBB 4
+aaaaa 1
+bbbb 3
+fffff 2
+ggggg 5
+hop 7
+lfdg;gls; 8
+kuban:~/me$ nano a.1
+kuban:~/me$ cat a.1
+aaaaa 1
+aaaaa 1
+fffff 2
+BBB 4
+bbbb 3
+AAAAAAA 4
+ggggg 5
+hop 7
+lfdg;gls; 8
+/// 9
+. 10
+
+kuban:~/me$ sort -u a.1
+
+. 10
+/// 9
+AAAAAAA 4
+BBB 4
+aaaaa 1
+bbbb 3
+fffff 2
+ggggg 5
+hop 7
+lfdg;gls; 8
+
+
+
+kuban:~$ nano a1
+kuban:~$ sort a1 //сортировка с регистром
+Alana 6 V8O-105B-22
+Katelin 5 V8O-101B-25
+Lida 5 V8O-101B-24
+Mary 10 V8O-110B-24
+henry 5 V8O-102B-21
+marta 5 V8O-106B-23
+kuban:~$ nano a1
+kuban:~$ sort a1
+Katelin 5 V8O-101B-25
+Lida 5 V8O-101B-24
+Mary 10 V8O-110B-24
+alana 6 V8O-105B-22
+henry 5 V8O-102B-21
+marta 5 V8O-106B-23
+
+
+kuban:~$ nano a1
+kuban:~$ sort -c a1 //проверка: отсортировали ли
+sort: a1:2: disorder: Lida 5 V8O-101B-24
+
+kuban:~$ sort a1
+Alana 6 V8O-105B-22
+Henry 5 V8O-102B-21
+Katelin 5 V8O-101B-25
+Lida 5 V8O-101B-24
+Marta 5 V8O-106B-23
+Mary 10 V8O-110B-24
+
+
+
+
+
+kuban:~$ cat a1
+Marta 5 V8O-106B-23
+Lida 5 V8O-101B-24
+Katelin 5 V8O-101B-25
+Henry 5 V8O-102B-21
+Alana 6 V8O-105B-22
+Mary 10 V8O-110B-24
+kuban:~$ sort a1
+Alana 6 V8O-105B-22
+Henry 5 V8O-102B-21
+Katelin 5 V8O-101B-25
+Lida 5 V8O-101B-24
+Marta 5 V8O-106B-23
+Mary 10 V8O-110B-24
+kuban:~$ sort -c a1 //поскольку не сохранили изменения, файл не отсортирован
+sort: a1:2: disorder: Lida 5 V8O-101B-24
+
+kuban:~$ sort -o a1 a.1 //сохраняем сортировку файла а1 в файл а.1
+kuban:~$ sort -o a.1 a1
+kuban:~$ cat a.1
+Alana 6 V8O-105B-22
+Henry 5 V8O-102B-21
+Katelin 5 V8O-101B-25
+Lida 5 V8O-101B-24
+Marta 5 V8O-106B-23
+Mary 10 V8O-110B-24
+
+
+//объединение отсортированных файлов
+
+kuban:~$ sort a.2 > a2
+kuban:~$ sort a.1 > a1
+kuban:~$ cat a1
+Alana 6 V8O-105B-22
+Henry 5 V8O-102B-21
+Katelin 5 V8O-101B-25
+Lida 5 V8O-101B-24
+Marta 5 V8O-106B-23
+Mary 10 V8O-110B-24
+kuban:~$ cat a2
+Alad 6 V8O-105B-22
+Huuda 5 V8O-106B-23
+Katik 5 V8O-101B-25
+Kid 5 V8O-101B-24
+Mary 10 V8O-110B-24
+Pou 5 V8O-102B-21
+kuban:~$ sort -m a1 a2
+Alad 6 V8O-105B-22
+Alana 6 V8O-105B-22
+Henry 5 V8O-102B-21
+Huuda 5 V8O-106B-23
+Katelin 5 V8O-101B-25
+Katik 5 V8O-101B-25
+Kid 5 V8O-101B-24
+Lida 5 V8O-101B-24
+Marta 5 V8O-106B-23
+Mary 10 V8O-110B-24
+Mary 10 V8O-110B-24
+Pou 5 V8O-102B-21
+kuban:~$ nano a2
+kuban:~$ sort -c a2 //а если второй файл не отсортирован?
+sort: a2:4: disorder: Aid 5 V8O-101B-24
+kuban:~$ sort -m a1 a2
+Alad 6 V8O-105B-22
+Alana 6 V8O-105B-22
+Henry 5 V8O-102B-21
+Huuda 5 V8O-106B-23
+Katelin 5 V8O-101B-25
+Katik 5 V8O-101B-25
+Aid 5 V8O-101B-24 //то объединение не сработает правильно
+Lida 5 V8O-101B-24
+Marta 5 V8O-106B-23
+Mary 10 V8O-110B-24
+Pary 10 V8O-110B-24
+Mou 5 V8O-102B-21
+
+
+
+
+
+kuban:~$ cat a2
+Alad 6 V8O-105B-22
+Huuda 5 V8O-106B-23
+Katik 5 V8O-101B-25
+Aid 5 V8O-101B-24
+Pary 10 V8O-110B-24
+Mou 5 V8O-102B-21
+kuban:~$ sort -nk 2 a2 //по числу второго столбца
+Aid 5 V8O-101B-24
+Huuda 5 V8O-106B-23
+Katik 5 V8O-101B-25
+Mou 5 V8O-102B-21
+Alad 6 V8O-105B-22
+Pary 10 V8O-110B-24
+kuban:~$ sort -k 2 a2 //почему 10 впереди?
+Pary 10 V8O-110B-24
+Aid 5 V8O-101B-24
+Katik 5 V8O-101B-25
+Mou 5 V8O-102B-21
+Huuda 5 V8O-106B-23
+Alad 6 V8O-105B-22
+kuban:~$ sort -t '-' -nk3 a2 
+Mou 5 V8O-102B-21
+Alad 6 V8O-105B-22
+Huuda 5 V8O-106B-23
+Aid 5 V8O-101B-24
+Pary 10 V8O-110B-24
+Katik 5 V8O-101B-25
+kuban:~$ nano a2
+kuban:~$ sort a2
+Alad 6 V8O-105B-22
+Huuda 5 V8O-106B-23
+Katik 5 V8O-101B-25
+Mou 5 V8O-102B-21
+Pary 10 V8O-110B-24
+aid 5 V8O-101B-24
+kuban:~$ sort -f a2 //забыть о регистрах
+aid 5 V8O-101B-24
+Alad 6 V8O-105B-22
+Huuda 5 V8O-106B-23
+Katik 5 V8O-101B-25
+Mou 5 V8O-102B-21
+Pary 10 V8O-110B-24
+kuban:~$ sort -nk2,3 a2 //что это?
+Huuda 5 V8O-106B-23
+Katik 5 V8O-101B-25
+Mou 5 V8O-102B-21
+aid 5 V8O-101B-24
+Alad 6 V8O-105B-22
+Pary 10 V8O-110B-24
+kuban:~$ nano a2
+kuban:~$ sort -nk2,3 a2 //
+Huuda 5 3
+Katik 5 4
+Mou 5 8
+aid 5 2
+Alad 6 2
+Pary 10 3
+kuban:~$ sort -nk2,2 a2 //
+Huuda 5 3
+Katik 5 4
+Mou 5 8
+aid 5 2
+Alad 6 2
+Pary 10 3
+kuban:~$ sort -nk2 -nk3 a2
+aid 5 2
+Huuda 5 3
+Katik 5 4
+Mou 5 8
+Alad 6 2
+Pary 10 3
+kuban:~$ cat a2
+Alad 6 2
+Huuda 5 3
+Katik 5 4
+aid 5 2
+Pary 10 3
+Mou 5 8
+kuban:~$ man sort
+kuban:~$ nano versionsprog.txt
+kuban:~$ cat versionsprog.txt
+1.0.0.1
+5.0.7.9
+3.4.5.6
+kuban:~$ sort --version-sort --field-separator=. versionsprog.txt
+1.0.0.1
+3.4.5.6
+5.0.7.9
+kuban:~$ sort --version-sort -t "." versio
+nsprog.txt
+1.0.0.1
+3.4.5.6
+5.0.7.9
+kuban:~$ nano versionsprog.txt
+kuban:~$ cat versionsprog.txt
+1.0.0.1
+1.0.7.9
+1.4.5.6
+1.0.0.9
+kuban:~$ sort --version-sort -t "." versionsprog.txt
+1.0.0.1
+1.0.0.9
+1.0.7.9
+1.4.5.6
+kuban:~$ sort --version-sort --field-separator=. versionsprog.txt
+1.0.0.1
+1.0.0.9
+1.0.7.9
+1.4.5.6
+kuban:~$ ls me
+a.1                    abc     code2.c        myd  t1   xac
+a.2                    c.txt   codefin.patch  rr   t2   xad
+a.out                  c.txt~  file.dos       rt   xaa
+a.out:Zone.Identifier  code.c  lab9.c         t    xab
+kuban:~$ man find
+//записать результат в файл, найдя по маске файлы из директории me
+kuban:~$ find me -iname "*.c" | sort --output=sorted.txt
+kuban:~$ cat sorted.txt
+me/code.c
+me/code2.c
+me/lab9.c
+kuban:~$ man sort
+
+[4]+  Stopped                 man sort
+kuban:~$
+
+
+GREP
+
+Команда grep (расшифровывается как global regular expression print) - одна из самых востребованных команд в терминале Linux, которая входит в состав проекта GNU. Она даёт возможность пользователям сортировать и фильтровать текст, находить по шаблону или регулярным выражениям.
+
+$ grep [ключи] шаблон [имя файла...]
+$ команда | grep [ключи] шаблон
+
+•	-c - подсчитать количество вхождений шаблона;
+•	-h - не выводить имя файла в результатах поиска внутри файлов Linux;
+•	-i - не учитывать регистр;
+•	- l - отобразить только имена файлов, в которых найден шаблон;
+•	-n - показывать номер строки в файле;
+•	-s - не показывать сообщения об ошибках;
+•	-v - инвертировать поиск, выдавать все строки кроме тех, что содержат шаблон;
+•	-w - искать шаблон как слово, окружённое пробелами;
+•	-e - использовать регулярные выражения при поиске;
+•	-An - показать вхождение и n строк до него;
+•	-Bn - показать вхождение и n строк после него;
+•	-Cn - показать n строк до и после вхождения;
+•	-b - показывать номер блока перед строкой;
+
+egrep это тоже самое, что и grep E. Этой команде в качестве шаблона передается расширенное регулярное выражениe.
+
+
+kuban:~$ nano a1
+kuban:~$ cat a1
+good day
+i like summer
+ok, just do it
+this is a very big work
+very big
+i for it to me from u
+kuban:~$ grep good a1
+good day
+kuban:~$ grep ok,\ just a1
+ok, just do it
+kuban:~$ nano a1
+kuban:~$ grep -i big a1
+this is a very Big work
+very big
+kuban:~$ grep -A2 big a1
+very big
+i for it to me from u
+kuban:~$ grep -iA2 big a1
+this is a very Big work
+very big
+i for it to me from u
+kuban:~$ grep -iC2 big a1
+i like summer
+ok, just do it
+this is a very Big work
+very big
+i for it to me from u
+kuban:~$ grep -C2 big a1
+ok, just do it
+this is a very Big work
+very big
+i for it to me from u
+kuban:~$ grep -C2 this a1
+i like summer
+ok, just do it
+this is a very Big work
+very big
+i for it to me from u
+kuban:~$ grep -c1 this a1
+1
+kuban:~$ grep -C1 this a1
+ok, just do it
+this is a very Big work
+very big
+kuban:~$ grep -A1 this a1
+this is a very Big work
+very big
+kuban:~$ grep -B1 this a1
+ok, just do it
+this is a very Big work
+kuban:~$ grep "^i" a1
+i like summer
+i for it to me from u
+kuban:~$ grep -e "^i" a1
+i like summer
+i for it to me from u
+kuban:~$ grep -e ^i a1
+i like summer
+i for it to me from u
+kuban:~$ grep ^i a1
+i like summer
+i for it to me from u
+kuban:~$ grep -i "Big$" a1
+very big
+kuban:~$ nano a1
+kuban:~$ cat a1
+good day
+i like 1 summer
+ok, just do it
+this is a very Big work
+very 4  big
+i for it to me from u
+kuban:~$ grep "[0-9]" a1
+i like 1 summer
+very 4  big
+kuban:~$ grep -r "i" me
+me/code2.c:#include <stdio.h>
+me/code2.c:int main(){
+me/code2.c:  printf("code\n");
+me/code2.c:  printf("New code");
+me/lab9.c:#include <stdio.h>
+me/lab9.c:int max(int a, int b) {
+me/lab9.c:      if (a > b)
+…
+…
+
+kuban:~$ grep -hr "i" me //поиск в директориях и поддиректориях без вывода путей к файлам
+#include <stdio.h>
+int main(){
+  printf("code\n");
+  printf("New code");
+#include <stdio.h>
+int max(int a, int b) {
+        if (a > b)
+int min(int a, int b) {
+        if (a < b)
+int sign(int a) {
+        if (a < 0)
+        else if (a > 0)
+int abs(int a) {
+        if (a >= 0)
+int mod(int a, int b) {
+        if (a % b == 0 || a >= 0)
+int mod(int a, int b) {
+    if ((a > 0 && b > 0) || (a < 0 && b < 0) || a == (a / b) * b ){
+int main() {
+        int i = -1, j = -1, l = -9, k;
+                int r=sqrt((i-10)*(i-10)+(j-10)*(j-10));
+          if (r<10) && (r>5)  {
+                        printf("%s, k = %d, i = %d, j = %d, l = %d\n", "Да", k, i, j, l);
+            int ii = mod(max(j-k,l-k),30) + mod(max(i+l,j+k),20);
+            int jj = mod(abs(i-l)*sign(j+k)+abs(i-k)*sign(j+k),20);
+            int ll = mod((i+k)*(j-k)*(l+k),25);
+            i = ii; j = jj; l = ll;
+    printf("%s, k = %d, i = %d, j = %d, l = %d \n", "Нет", k, i, j, l);
+ cat with y
+#include <stdio.h>
+ int main()
+inc c, g, h;
+printf("%d", h);
+#include <stdio.h>
+ int
+main (  )
+inc c, g, h;
+printf ( "%d", h );
+HostUrl=https://psv4.userapi.com/c237231/u211239299/docs/d42/877afc4e1616/a.out?extra=pshCDGAybf0br28tgbVbCmau69iN015Z1o3qfDBoLTJe9eKGA2CGMmEM1vc0xukiDIm9IYdsqwPMMjfxQwqWdi6EJgsZeizIaHXWMdNRm2dWtTT9DMWzLizvW0wbqvYmyca2RvMjKFaf4LDs78-0&dl=1
+#include <stdio.h>
+int main(){
+  printf("code\n");
+  printf("New code");
+Binary file me/a.out matches
+ int main(){
+   printf("code\n");
++  printf("New code");
+kuban:~$ grep -w i a1
+i like 1 summer
+i for it to me from u
+kuban:~$ grep -w u a1
+i for it to me from u
+kuban:~$ grep -iw 'big|summer' a1
+kuban:~$ grep -w 'big |summer' a1
+kuban:~$ cat a1
+good day
+i like 1 summer
+ok, just do it
+this is a very Big work
+very 4  big
+i for it to me from u
+kuban:~$ grep -w "big|summer" a1
+
+
+
+
+egrep это тоже самое, что и grep E. Этой команде в качестве шаблона передается расширенное регулярное выражениe.
+
+
+kuban:~$ egrep -iw "big|summer" a1
+i like 1 summer
+this is a very Big work
+very 4  big
+kuban:~$ grep -ciw i a1
+2
+kuban:~$ grep -n i a1
+2:i like 1 summer
+3:ok, just do it
+4:this is a very Big work
+5:very 4  big
+6:i for it to me from u
+kuban:~$ grep -v i a1
+good day
+kuban:~$ grep -hr "hi" me
+kuban:~$ grep -hr "i " me
+        int i = -1, j = -1, l = -9, k;
+                        printf("%s, k = %d, i = %d, j = %d, l = %d\n", "Да", k, i, j, l);
+            int ii = mod(max(j-k,l-k),30) + mod(max(i+l,j+k),20);
+            i = ii; j = jj; l = ll;
+    printf("%s, k = %d, i = %d, j = %d, l = %d \n", "Нет", k, i, j, l);
+Binary file me/a.out matches
+kuban:~$ grep -hr "i" me
+#include <stdio.h>
+int main(){
+  printf("code\n");
+  printf("New code");
+#include <stdio.h>
+int max(int a, int b) {
+        if (a > b)
+int min(int a, int b) {
+        if (a < b)
+int sign(int a) {
+        if (a < 0)
+        else if (a > 0)
+int abs(int a) {
+        if (a >= 0)
+int mod(int a, int b) {
+        if (a % b == 0 || a >= 0)
+int mod(int a, int b) {
+    if ((a > 0 && b > 0) || (a < 0 && b < 0) || a == (a / b) * b ){
+int main() {
+        int i = -1, j = -1, l = -9, k;
+                int r=sqrt((i-10)*(i-10)+(j-10)*(j-10));
+          if (r<10) && (r>5)  {
+                        printf("%s, k = %d, i = %d, j = %d, l = %d\n", "Да", k, i, j, l);
+            int ii = mod(max(j-k,l-k),30) + mod(max(i+l,j+k),20);
+            int jj = mod(abs(i-l)*sign(j+k)+abs(i-k)*sign(j+k),20);
+            int ll = mod((i+k)*(j-k)*(l+k),25);
+            i = ii; j = jj; l = ll;
+    printf("%s, k = %d, i = %d, j = %d, l = %d \n", "Нет", k, i, j, l);
+ cat with y
+#include <stdio.h>
+ int main()
+inc c, g, h;
+printf("%d", h);
+#include <stdio.h>
+ int
+main (  )
+inc c, g, h;
+printf ( "%d", h );
+HostUrl=https://psv4.userapi.com/c237231/u211239299/docs/d42/877afc4e1616/a.out?extra=pshCDGAybf0br28tgbVbCmau69iN015Z1o3qfDBoLTJe9eKGA2CGMmEM1vc0xukiDIm9IYdsqwPMMjfxQwqWdi6EJgsZeizIaHXWMdNRm2dWtTT9DMWzLizvW0wbqvYmyca2RvMjKFaf4LDs78-0&dl=1
+#include <stdio.h>
+int main(){
+  printf("code\n");
+  printf("New code");
+Binary file me/a.out matches
+ int main(){
+   printf("code\n");
++  printf("New code");
+kuban:~$ grep -lr "i" me //вывод путей к файлам, в которых есть “i”
+me/code2.c
+me/lab9.c
+me/xac
+me/c.txt~
+me/c.txt
+me/a.out:Zone.Identifier
+me/code.c
+me/a.out
+me/codefin.patch
+kuban:~$ grep -lhr "i" me //ничего не поменялось
+me/code2.c
+me/lab9.c
+me/xac
+me/c.txt~
+me/c.txt
+me/a.out:Zone.Identifier
+me/code.c
+me/a.out
+me/codefin.patch
+kuban:~$ man grep
+
+[2]+  Stopped                 man grep
+
+ 
+
+Как образуются цвета в grep?
+
+kuban:~$ grep "bi[g-w]" a1
+very 4  big
+kuban:~$ grep "bi[^g-w]" a1 //кроме
+kuban:~$ grep "b.g" a1 //какой-то символ
+very 4  big
+kuban:~$ cat a1
+good day
+i like 1 summer
+ok, just do it
+this is a very Big work
+very 4  big
+i for it to me from u
+kuban:~$ grep "g..d" a1
+good day
+kuban:~$
+
+
+SPLIT
+
+Данная команда разбивает один большой файл на несколько маленьких. Для запуска следует указать ключи, путь к большому файлу и путь создания новых файлов с общим префиксом имени.
+
+$split ключи /местоположение/исходного/файла /путь/к/конечной/папке/префикс_имени
+
+
+Основные ключи
+•	--additional-suffix – указать дополнительный суффикс.
+•	-b, --bytes – разбить файл на части равного указанного размера. Единица измерения – 1 байт, 1000 байт записывается как KB, 1024 как K. По аналогии есть MB (M), GB (G) и так далее.
+•	-C, --line-bytes – разбить файл на части не более указанного размера, не разделяя строки/записи внутри него.
+•	-d – использовать числовой суффикс в имени конечного файла вместо алфавитного. Отсчет начинается с нуля.
+•	--numeric-suffixes – то же самое, что и -d, но еще задаётся начальное число для отсчета.
+•	-x – использовать hex-префикс вместо алфавитного. Начальное значение – 0.
+•	--hex-suffixes – то же самое, что и -x, но начальное значение задаётся вручную.
+•	-e, --elide-empty-files – не создавать пустые файлы при выполнении опции -n.
+•	-l, --lines – установить максимальное количество строк/записей итогового файла. По умолчанию команда split разбивает файл на 1000 строк.
+•	-n, --number – разбить файл на чанки (указанное количество частей).
+•	-t, --separator – установить свой разделительный символ вместо новой строки.
+•	--verbose – выводить информацию о новых файлах перед их созданием.
+•	--version – посмотреть версию утилиты.
+•	-a, --suffix-length – задать длину суффикса (количество символов) в имени части файла. По умолчанию это 2 символа.
+
+kuban:~$ cat a1
+good day
+i like 1 summer
+ok, just do it
+this is a very Big work
+very 4  big
+i for it to me from u
+kuban:~$ wc a1
+ 6 26 98 a1
+kuban:~$ ls -lh //в каком количестве?
+total 68K
+-rw-r--r-- 1 kateland kateland    0 Oct  4 20:21 0
+-rw-r--r-- 1 kateland kateland   98 Feb 26 03:39 A1_aa
+-rw-r--r-- 1 kateland kateland  121 Feb 26 00:50 a.1
+-rw-r--r-- 1 kateland kateland  115 Feb 26 00:57 a.2
+-rw-r--r-- 1 kateland kateland    0 Feb 25 20:16 a.3
+-rw-r--r-- 1 kateland kateland   98 Feb 26 02:46 a1
+-rw-r--r-- 1 kateland kateland   59 Feb 26 01:14 a2
+-rw-r--r-- 1 kateland kateland   59 Feb 26 02:33 a2.save
+drwxr-xr-x 4 kateland kateland 4.0K Feb 19 04:35 desktop
+-rw-r--r-- 1 kateland kateland    0 Dec 20 21:23 f
+-rw-r--r-- 1 kateland kateland  328 Sep 20 18:57 f.tgz
+-rw-r--r-- 1 kateland kateland    0 Dec 20 21:23 f1
+-rw-r--r-- 1 kateland kateland    0 Dec 20 21:23 f2
+drwxr-xr-x 2 kateland kateland 4.0K Sep 20 17:03 kkk.5.10.16.3-microsoft-standard-WSL2
+drwxrwxrwx 4 kateland kateland 4.0K Feb 19 17:16 me
+-rwxr-xr-x 1 kateland kateland   81 Feb 20 18:07 sc.sh
+-rw-r--r-- 1 kateland kateland   31 Feb 26 01:35 sorted.txt
+-rw-r--r-- 1 kateland kateland   32 Feb 26 01:21 versionsprog.txt
+-rw-r--r-- 1 kateland kateland    9 Feb 25 22:11 xaa
+-rw-r--r-- 1 kateland kateland    9 Feb 25 22:11 xab
+-rw-r--r-- 1 kateland kateland    9 Feb 25 22:11 xac
+-rw-r--r-- 1 kateland kateland   12 Feb 25 22:11 xad
+kuban:~$ split -b 10 ~/a1 A1_
+kuban:~$ ls
+0      A1_ag  a1       f2                                     xab
+A1_aa A1_ah  a2       kkk.5.10.16.3-microsoft-standard-WSL2  xac
+A1_ab  A1_ai  a2.save  me                                     xad
+A1_ac  A1_aj  desktop  sc.sh
+A1_ad  a.1    f        sorted.txt
+A1_ae  a.2    f.tgz    versionsprog.txt
+A1_af  a.3    f1       xaa
+kuban:~$ split -b 10 -d ~/a1 A1_
+kuban:~$ ls
+0      A1_aa  a.2                                    me
+A1_00  A1_ab  a.3                                    sc.sh
+A1_01  A1_ac  a1                                     sorted.txt
+A1_02  A1_ad  a2                                     versionsprog.txt
+A1_03  A1_ae  a2.save                                xaa
+A1_04  A1_af  desktop                                xab
+A1_05  A1_ag  f                                      xac
+A1_06  A1_ah  f.tgz                                  xad
+A1_07  A1_ai  f1
+A1_08  A1_aj  f2
+A1_09  a.1    kkk.5.10.16.3-microsoft-standard-WSL2
+kuban:~$ split -b 20 -d ~/a1 A1_
+kuban:~$ ls
+0      A1_aa  a.2                                    me
+A1_00  A1_ab  a.3                                    sc.sh
+A1_01  A1_ac  a1                                     sorted.txt
+A1_02  A1_ad  a2                                     versionsprog.txt
+A1_03  A1_ae  a2.save                                xaa
+A1_04  A1_af  desktop                                xab
+A1_05  A1_ag  f                                      xac
+A1_06  A1_ah  f.tgz                                  xad
+A1_07  A1_ai  f1
+A1_08  A1_aj  f2
+A1_09  a.1    kkk.5.10.16.3-microsoft-standard-WSL2
+kuban:~$ cat A1_00
+good day
+i like 1 su
+kuban:~$ cat A1_09
+ from u
+kuban:~$ cat A1_08
+r it to me
+kuban:~$
+kuban:~$ split -l 5 -d ~/a1 Astroki_ //разделение по строкам
+kuban:~$ ls
+0      A1_aa       Astroki_01  f2
+A1_00  A1_ab       a.1         kkk.5.10.16.3-microsoft-standard-WSL2
+A1_01  A1_ac       a.2         me
+A1_02  A1_ad       a.3         sc.sh
+A1_03  A1_ae       a1          sorted.txt
+A1_04  A1_af       a2          versionsprog.txt
+A1_05  A1_ag       a2.save     xaa
+A1_06  A1_ah       desktop     xab
+A1_07  A1_ai       f           xac
+A1_08  A1_aj       f.tgz       xad
+A1_09  Astroki_00  f1
+kuban:~$ cat Astroki_00
+good day
+i like 1 summer
+ok, just do it
+this is a very Big work
+very 4  big
+kuban:~$ cat Astroki_01
+i for it to me from u
+kuban:~$ split -n 2 -d ~/a1 Afile_
+kuban:~$ ls
+0      A1_08  A1_ah       a.3      kkk.5.10.16.3-microsoft-standard-WSL2
+A1_00  A1_09  A1_ai       a1       me
+A1_01  A1_aa  A1_aj       a2       sc.sh
+A1_02  A1_ab  Afile_00    a2.save  sorted.txt
+A1_03  A1_ac  Afile_01    desktop  versionsprog.txt
+A1_04  A1_ad  Astroki_00  f        xaa
+A1_05  A1_ae  Astroki_01  f.tgz    xab
+A1_06  A1_af  a.1         f1       xac
+A1_07  A1_ag  a.2         f2       xad
+kuban:~$ cat Afile_00
+good day
+i like 1 summer
+ok, just do it
+this is a
+kuban:~$
+kuban:~$ split -n l/2 -d ~/a1 Afile_ //с сохранением строк
+kuban:~$ ls
+0      A1_08  A1_ah       a.3      kkk.5.10.16.3-microsoft-standard-WSL2
+A1_00  A1_09  A1_ai       a1       me
+A1_01  A1_aa  A1_aj       a2       sc.sh
+A1_02  A1_ab  Afile_00    a2.save  sorted.txt
+A1_03  A1_ac  Afile_01    desktop  versionsprog.txt
+A1_04  A1_ad  Astroki_00  f        xaa
+A1_05  A1_ae  Astroki_01  f.tgz    xab
+A1_06  A1_af  a.1         f1       xac
+A1_07  A1_ag  a.2         f2       xad
+kuban:~$ cat Afile_00
+good day
+i like 1 summer
+ok, just do it
+this is a very Big work
+kuban:~$ cat Afile_01
+very 4  big
+i for it to me from u
+kuban:~$ split -a 3 --numeric-suffixes=2 -n l/2 ~/a1 Afil
+e_   //три цифры в конце имени файла и начать с 2, разделить на два файла и не разрывать строки
+kuban:~$ ls
+0      A1_ab      Afile_01    f1
+A1_00  A1_ac      Astroki_00  f2
+A1_01  A1_ad      Astroki_01  kkk.5.10.16.3-microsoft-standard-WSL2
+A1_02  A1_ae      a.1         me
+A1_03  A1_af      a.2         sc.sh
+A1_04  A1_ag      a.3         sorted.txt
+A1_05  A1_ah      a1          versionsprog.txt
+A1_06  A1_ai      a2          xaa
+A1_07  A1_aj      a2.save     xab
+A1_08  Afile_00   desktop     xac
+A1_09  Afile_002  f           xad
+A1_aa  Afile_003  f.tgz
+
+объединение файлов
+kuban:~$ cat Afile_003
+very 4  big
+i for it to me from u
+kuban:~$ cat Afile_002
+good day
+i like 1 summer
+ok, just do it
+this is a very Big work
+kuban:~$
+kuban:~$
+kuban:~$ cat Afile_00* > a1 //записался еще и 00
+kuban:~$ cat a1
+good day
+i like 1 summer
+ok, just do it
+this is a very Big work
+good day
+i like 1 summer
+ok, just do it
+this is a very Big work
+very 4  big
+i for it to me from u
+kuban:~$ cat Afile_00? > a1
+kuban:~$ cat a1
+good day
+i like 1 summer
+ok, just do it
+this is a very Big work
+very 4  big
+i for it to me from u
+
+
+
+

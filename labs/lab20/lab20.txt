@@ -1,0 +1,1385 @@
+Абдисаламов Эл
+М8О-106Б-22
+
+#awk (Alfred Aho, Peter Weinberger и Brian Kernighan): 
+   $filon@Filon:~/lab20$ awk '{print $0}' test
+    firstName       lastName        age     city       ID
+
+    Thomas          Shelby          30      Rio        400
+    Omega           Night           45      Ontario    600
+    Wood            Tinker          54      Lisbon     N/A
+    Giorgos         Georgiou        35      London     300
+    Timmy           Turner          32      Berlin     N/A
+   $filon@Filon:~/lab20$ awk '{print $1}' test
+    firstName
+
+    Thomas
+    Omega
+    Wood
+    Giorgos
+    Timmy
+   $filon@Filon:~/lab20$ awk '{print $1, $3}' test
+    firstName age
+
+    Thomas 30
+    Omega 45
+    Wood 54
+    Giorgos 35
+    Timmy 32
+   $filon@Filon:~/lab20$ awk '{print NR, $1, $3}' test
+    1 firstName age
+
+    3 Thomas 30
+    4 Omega 45
+    5 Wood 54
+    6 Giorgos 35
+    7 Timmy 32
+   $filon@Filon:~/lab20$ awk '{print NR, $4, $3}' test
+    1 city age
+    2
+    3 Rio 30
+    4 Ontario 45
+    5 Lisbon 54
+    6 London 35
+    7 Berlin 32
+   $filon@Filon:~/lab20$ awk '{print NR, $4, $NF}' test
+    1 city ID
+    2
+    3 Rio 400
+    4 Ontario 600
+    5 Lisbon N/A
+    6 London 300
+    7 Berlin N/A
+   $filon@Filon:~/lab20$ awk '{print NR, $1, $NF}' test
+    1 firstName ID
+
+    3 Thomas 400
+    4 Omega 600
+    5 Wood N/A
+    6 Giorgos 300
+    7 Timmy N/A
+   $filon@Filon:~/lab20$ awk '/ 0$/' test
+   $filon@Filon:~/lab20$ awk '/0$/' test
+   $filon@Filon:~/lab20$ awk '{print $1, "cool!"}' test
+    firstName cool!
+    cool!
+    Thomas cool!
+    Omega cool!
+    Wood cool!
+    Giorgos cool!
+    Timmy cool!
+   $filon@Filon:~/lab20$ awk -F: '{print $NF}' <<< "nan:12 43:ffas:rtaf"
+    rtaf
+   $filon@Filon:~/lab20$ echo "nan:12 43:ffas:rtaf"| awk -F: '{print $(NF-1)}'
+    ffas
+   $filon@Filon:~/lab20$ ls -lS  ~/lab21/files | awk '{sum+=$5} END {print sum}'
+    0
+   $filon@Filon:~/lab20$ ls -lS  ~/lab21/files
+    total 0
+    -rw-r--r-- 1 filon filon 0 Feb 18 18:37  0
+    -rw-r--r-- 1 filon filon 0 Feb 18 18:37  1
+   $filon@Filon:~/lab20$ ls -lS  ~/lab21 | awk '{sum+=$5} END {print sum}'
+    5068
+   $filon@Filon:~/lab20$ ls -lS  ~/lab21 | awk ' /lab/ {sum+=$5} END {print sum}'
+    972
+   $filon@Filon:~/lab20$ ls -lS  ~/lab21 | awk '$5 == 0 {sum+=$5} END {print sum}'
+    0
+   $filon@Filon:~/lab20$ ls -lS  ~/lab21 | awk ' $1 ~ /x/ {print $9}'
+    files
+    lab21.sh
+   $filon@Filon:~/lab20$ ls -lS  ~/lab21 | awk ' $5 ~ /x/ {print $9}'
+   $filon@Filon:~/lab20$ ls -lS  ~/lab21 | awk ' $9 ~ /^k/ {print $9}'
+    ku
+   $filon@Filon:~/lab20$ ls -lS  ~/lab21 | awk ' $9 ~ /.sh$/ {print $9}'
+    lab21.sh
+   $filon@Filon:~/lab20$ ls -lS  ~/lab21 | awk '{sum+=$5} {print sum}'
+    0
+    4096
+    5068
+    5068
+   $filon@Filon:~/lab20$ ls -lS  ~/lab21 | awk '{sum+=$5} END {print sum}'
+    5068
+   $filon@Filon:~/lab20$ ls -lS  ~/lab21 | awk 'lenght $5 < 2 {sum+=$5} END {print sum}'
+    0
+   $filon@Filon:~/lab20$ ls -lS  ~/lab21/files | awk ' lenght $9 > 2 {sum+=$7} {print "long"} ; lenght $9 < 3 {sum-=$7} {print "short"} END {print sum}'
+    long
+    short
+    long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+        long
+        short
+    long
+    short
+    long
+    short
+    685
+
+#grep - используется для поиска строк, фильтра вывода команд
+  $quibex@STARK:~/labs/lab20$ grep "5" test 
+    Omega           Night           45      Ontario    600
+    Wood            Tinker          54      Lisbon     N/A
+    Giorgos         Georgiou        35      London     300
+  $quibex@STARK:~/labs/lab20$ grep "5" test | tr 5 999 
+    Omega           Night           49      Ontario    600
+    Wood            Tinker          94      Lisbon     N/A
+    Giorgos         Georgiou        39      London     300
+  $quibex@STARK:~/labs/lab20$ grep "5" test | tr 5 "999"
+    Omega           Night           49      Ontario    600
+    Wood            Tinker          94      Lisbon     N/A
+    Giorgos         Georgiou        39      London     300
+  $quibex@STARK:~/labs/lab20$ grep "5" test | tr -d 5 
+    Omega           Night           4      Ontario    600
+    Wood            Tinker          4      Lisbon     N/A
+    Giorgos         Georgiou        3      London     300
+
+  $quibex@STARK:~$ grep -r elmar
+    grep: Django/store-server/venv/lib/python3.10/site-packages/pygments/lexers/__pycache__/_asy_builtins.cpython-310.pyc: binary file matches
+    grep: Django/store-server/venv/lib/python3.10/site-packages/pygments/lexers/__pycache__/_vim_builtins.cpython-310.pyc: binary file matches 
+    Django/store-server/venv/lib/python3.10/site-packages/pygments/lexers/_vim_builtins.py:        ('delm','delmarks'),
+    Django/store-server/venv/lib/python3.10/site-packages/pygments/lexers/_asy_builtins.py:    'labelmargin',
+    Django/store-server/venv/lib/python3.10/site-packages/pygments/lexers/_asy_builtins.py:    'labelmargin',
+    grep: Django/store-server/store/db.sqlite3: binary file matches
+    grep: labs/lab21/files/Lab9.exe: binary file matches
+    grep: .ipython/profile_default/history.sqlite: binary file matches
+
+  $quibex@STARK:~/labs/lab20$ ls | grep -e txt -e test
+    5test
+    5test5
+    c.txt
+    c.txt~
+    lab20.txt
+    outtest5
+    test
+    test5
+  $quibex@STARK:~/labs/lab20$ ls | grep "test[1235]"
+    5test5
+    outtest5
+    test1
+    test12
+    test2
+    test23
+    test3
+    test5
+  $quibex@STARK:~/labs/lab20$ ls | grep "xa[a-z]"
+    xaa
+    xab
+    xac
+    xad
+    xae
+    xaf
+    xag
+    xah
+    xai
+    xaj
+    xak
+    xal
+    xam
+    xan
+    xao
+    xap
+    xaq
+    xar
+    xas
+    xat
+    xau
+    xav
+    xaw
+    xax
+    xay
+    xaz
+  $quibex@STARK:~/labs/lab20$ ls | grep "^xa"
+    xaa
+    xab
+    xac
+    xad
+    xae
+    xaf
+    xag
+    xah
+    xai
+    xaj
+    xak
+    xal
+    xam
+    xan
+    xao
+    xap
+    xaq
+    xar
+    xas
+    xat
+    xau
+    xav
+    xaw
+    xax
+    xay
+    xaz
+  $quibex@STARK:~/labs/lab20$ ls | grep "5$"
+    5test5
+    outtest5
+    test5
+  $quibex@STARK:~/labs/lab20$ ls | grep "5....5"
+    5test5
+  $quibex@STARK:~/labs/lab20$ ls | grep -E "5|xar"
+    5test
+    5test5
+    outtest5
+    test5
+    xar
+
+#find - поиск всего с фильтрами:
+   $quibex@STARK:~/labs/lab20$ find . -name "xa*"
+    ./xaa
+    ./xac
+    ./xag
+    ./xam
+    ./xad
+    ./xar
+    ./xah
+    ./xaw
+    ./xan
+    ./xab
+    ./xas
+    ./xaj
+    ./xap
+    ./xak
+    ./xav
+    ./xaq
+    ./xaz
+    ./xay
+    ./xal
+    ./xae
+    ./xax
+    ./xao
+    ./xau
+    ./xai
+    ./xaf
+    ./xat   
+   $quibex@STARK:~/labs/lab20$ find .. -type d
+    ..
+    ../lab21
+    ../lab21/files
+    ../lab20
+    ../structs
+    ../structs/vector
+    ../structs/dack2
+    ../structs/dack
+    ../structs/satck
+    ../structs/stack2
+    ../structs/queue
+    ../.vscode   
+   $quibex@STARK:~/labs/lab20$ find .. -type d
+    ..
+    ../lab21
+    ../lab21/files
+    ../lab20
+    ../structs
+    ../structs/vector
+    ../structs/dack2
+    ../structs/dack
+    ../structs/satck
+    ../structs/stack2
+    ../structs/queue
+    ../.vscode   
+   $quibex@STARK:~/labs/lab20$ find .. -size +10k
+    ../lab21/files
+    ../lab21/files/Отчет Лаб №3.docx
+    ../lab21/files/Отчет Лаб №10.docx
+    ../lab21/files/Отчет Лаб №12.docx
+    ../lab21/files/Отчет Лаб №13.docx
+    ../lab21/files/l15-2011.pdf
+    ../lab21/files/l08-2011.pdf
+    ../lab21/files/l05-2011 (1).pdf
+    ../lab21/files/Отчет Лаб №15.docx
+    ../lab21/files/Отчет Лаб №6.docx
+    ../lab21/files/kp12-2011 — копия.pdf
+    ../lab21/files/l07-2011.pdf
+    ../lab21/files/l02-2018-1 (1).pdf
+    ../lab21/files/lab_14.jpg
+    ../lab21/files/Отчет Лаб №14.docx
+    ../lab21/files/l09-2011.pdf
+    ../lab21/files/kp12-2011.pdf
+    ../lab21/files/Отчет Лаб №5.docx
+    ../lab21/files/Лаб №2.docx
+    ../lab21/files/l06-2016 (1).pdf
+    ../lab21/files/l14-2011.pdf
+    ../lab21/files/Отчет Лаб №9.docx
+    ../lab21/files/l13-2011.pdf
+    ../lab21/files/таблица с оценками.docx
+    ../lab21/files/Отчет Лаб №11.docx
+    ../lab21/files/kp3-2011.pdf
+    ../lab21/files/l03-2011.pdf
+    ../lab21/files/l1112-2011.pdf
+    ../lab21/files/Лаб №8.docx
+    ../lab21/files/kp4.exe
+    ../lab21/files/Отчет Лаб №2.docx
+    ../lab21/files/КП №4.docx
+    ../lab21/files/Lab9.exe
+    ../lab21/files/Отчет Лаб №7.docx
+    ../lab21/files/КП №3.docx
+    ../lab21/files/l10-2011.pdf
+    ../lab21/files/kp3.exe
+    ../lab21/files/a.exe
+    ../lab21/files/Отчет Лаб №2 — копия.docx
+    ../lab21/files/kp4-2011.pdf
+    ../lab20/ЛР20
+    ../lab20/lab20.txt
+    ../structs/vector/a.out
+    ../structs/dack2/a.out
+    ../structs/dack/a.out   
+   $quibex@STARK:~/labs/lab20$ find . -empty
+    ./test1
+    ./test23
+    ./test3
+    ./test12
+    ./test2   
+   $quibex@STARK:~/labs/lab20$ find /home -size +9900k
+    /home/quibex/Django/store-server/.git/objects/pack/pack-8311bbc2010f9722037c3029a1892b0f013210ff.pack
+    /home/quibex/Olimp/2sem/a.exe   
+   $quibex@STARK:~/labs/lab20$ find . -cmin -60
+    ./lab20.txt   
+   $quibex@STARK:~/labs/lab20$ find ~ -user ilon -name "*.bag"
+    find: ‘ilon’ is not the name of a known user   
+   $quibex@STARK:~/labs/lab20$ find . -user quibex -and -name "xa*" -delete   
+   $quibex@STARK:~/labs/lab20$ find . -name "xa*"   
+   $quibex@STARK:~/labs/lab20$ ls
+    5test   c.txt~  lab20.txt  test1   test23  xba  xbd  xbg
+    5test5  f1      outtest5   test12  test3   xbb  xbe  xbh
+    c.txt   f2      test       test2   test5   xbc  xbf  ЛР20   
+   $quibex@STARK:~/labs/lab20$ find . -name "lab*" -or -perm 777
+    ./lab20.txt   
+   $quibex@STARK:~/labs/lab20$ find ../lab21/files/ -name "test*" 
+    ../lab21/files/test1
+    ../lab21/files/test23
+    ../lab21/files/test3
+    ../lab21/files/test
+    ../lab21/files/test12
+    ../lab21/files/test5
+    ../lab21/files/test2
+
+du - позволяет вывести размер всех файлов в определённой папке: 
+   $filon@Filon:/home$ du
+    16      ./filon/lab20
+    4       ./filon/lab21/files
+    16      ./filon/lab21
+    8       ./filon/.vscode
+    4       ./filon/.local/share/nano
+    8       ./filon/.local/share
+    12      ./filon/.local
+    52      ./filon/Olimp/Yandex
+    8       ./filon/Olimp/2sem/3g
+    15288   ./filon/Olimp/2sem
+    15344   ./filon/Olimp
+    15488   ./filon
+    15492   .
+   $filon@Filon:/home$ du -a
+    4       ./filon/.lesshst
+    4       ./filon/test.sh
+    4       ./filon/.bashrc
+    0       ./filon/.motd_shown
+    4       ./filon/lab20/test
+    8       ./filon/lab20/lab20.txt
+    16      ./filon/lab20
+    4       ./filon/.viminfo
+    0       ./filon/g.c
+    4       ./filon/kons-20-02-23.sh
+    4       ./filon/ban.sh
+    4       ./filon/.bash_logout
+    12      ./filon/.df.cpp.swp
+    4       ./filon/varik.sh
+    4       ./filon/.wget-hsts
+    20      ./filon/a.out
+    4       ./filon/.profile
+    4       ./filon/ch.sh
+    4       ./filon/lab21/lab21.sh
+    4       ./filon/lab21/config
+    0       ./filon/lab21/files/2
+    0       ./filon/lab21/files/mjill
+    0       ./filon/lab21/files/34t
+    0       ./filon/lab21/files/4234f34f43f
+    4       ./filon/lab21/files
+    0       ./filon/lab21/ku
+    16      ./filon/lab21
+    4       ./filon/test.cpp
+    0       ./filon/.sudo_as_admin_successful
+    4       ./filon/.vscode/c_cpp_properties.json
+    8       ./filon/.vscode
+    4       ./filon/.local/share/nano
+    8       ./filon/.local/share
+    12      ./filon/.local
+    8       ./filon/.bash_history
+    4       ./filon/Olimp/Yandex/b.cpp
+    4       ./filon/Olimp/Yandex/1.in
+    36      ./filon/Olimp/Yandex/a.out
+    4       ./filon/Olimp/Yandex/a.cpp
+    52      ./filon/Olimp/Yandex
+    4       ./filon/Olimp/2sem/3g/test.cpp
+    8       ./filon/Olimp/2sem/3g
+    4       ./filon/Olimp/2sem/test2.cpp
+    15156   ./filon/Olimp/2sem/a.exe
+    4       ./filon/Olimp/2sem/1.in
+    80      ./filon/Olimp/2sem/a.out
+    4       ./filon/Olimp/2sem/test3.cpp
+    4       ./filon/Olimp/2sem/test1.cpp
+    4       ./filon/Olimp/2sem/f.cpp
+    4       ./filon/Olimp/2sem/g.cpp
+    4       ./filon/Olimp/2sem/a.cpp
+    4       ./filon/Olimp/2sem/e.cpp
+    4       ./filon/Olimp/2sem/c.cpp
+    4       ./filon/Olimp/2sem/test4.cpp
+    15288   ./filon/Olimp/2sem
+    15344   ./filon/Olimp
+    15488   ./filon
+    15492   .
+   $filon@Filon:/home$ du -BM
+    1M      ./filon/lab20
+    1M      ./filon/lab21/files
+    1M      ./filon/lab21
+    1M      ./filon/.vscode
+    1M      ./filon/.local/share/nano
+    1M      ./filon/.local/share
+    1M      ./filon/.local
+    1M      ./filon/Olimp/Yandex
+    1M      ./filon/Olimp/2sem/3g
+    15M     ./filon/Olimp/2sem
+    15M     ./filon/Olimp
+    16M     ./filon
+    16M     .
+   $filon@Filon:/home$ du -BMh
+    du: invalid suffix in -B argument 'Mh'
+   $filon@Filon:/home$ du -BM -h
+    16K     ./filon/lab20
+    4.0K    ./filon/lab21/files
+    16K     ./filon/lab21
+    8.0K    ./filon/.vscode
+    4.0K    ./filon/.local/share/nano
+    8.0K    ./filon/.local/share
+    12K     ./filon/.local
+    52K     ./filon/Olimp/Yandex
+    8.0K    ./filon/Olimp/2sem/3g
+    15M     ./filon/Olimp/2sem
+    15M     ./filon/Olimp
+    16M     ./filon
+    16M     .
+   $filon@Filon:/home$ du -S
+    16      ./filon/lab20
+    4       ./filon/lab21/files
+    12      ./filon/lab21
+    8       ./filon/.vscode
+    4       ./filon/.local/share/nano
+    4       ./filon/.local/share
+    4       ./filon/.local
+    52      ./filon/Olimp/Yandex
+    8       ./filon/Olimp/2sem/3g
+    15280   ./filon/Olimp/2sem
+    4       ./filon/Olimp
+    92      ./filon
+    4       .
+   $filon@Filon:/home$ du -s
+    15492   .
+   $filon@Filon:/home$ du -s -BM
+    16M     .
+   $filon@Filon:/home$ du -s -BM -S
+    1M      .
+   $filon@Filon:/home$ du -s -BM -t 10
+    16M     .
+   $filon@Filon:/home$ du -BM -t 10 -h | sort -h
+    4.0K    ./filon/.local/share/nano
+    4.0K    ./filon/lab21/files
+    8.0K    ./filon/.local/share
+    8.0K    ./filon/.vscode
+    8.0K    ./filon/Olimp/2sem/3g
+    12K     ./filon/.local
+    16K     ./filon/lab20
+    16K     ./filon/lab21
+    52K     ./filon/Olimp/Yandex
+    15M     ./filon/Olimp
+    15M     ./filon/Olimp/2sem
+    16M     .
+    16M     ./filon
+   $filon@Filon:/home$ du -BM -t 10 -h | sort
+    12K     ./filon/.local
+    15M     ./filon/Olimp
+    15M     ./filon/Olimp/2sem
+    16K     ./filon/lab20
+    16K     ./filon/lab21
+    16M     .
+    16M     ./filon
+    4.0K    ./filon/.local/share/nano
+    4.0K    ./filon/lab21/files
+    52K     ./filon/Olimp/Yandex
+    8.0K    ./filon/.local/share
+    8.0K    ./filon/.vscode
+    8.0K    ./filon/Olimp/2sem/3g
+   $filon@Filon:/home$ du -BM -t 10 | sort
+    15M     ./filon/Olimp
+    15M     ./filon/Olimp/2sem
+    16M     .
+    16M     ./filon
+    1M      ./filon/.local
+    1M      ./filon/.local/share
+    1M      ./filon/.local/share/nano
+    1M      ./filon/.vscode
+    1M      ./filon/Olimp/2sem/3g
+    1M      ./filon/Olimp/Yandex
+    1M      ./filon/lab20
+    1M      ./filon/lab21
+    1M      ./filon/lab21/files
+   $filon@Filon:/home$
+
+tail - позволяет выводить заданное количество строк с конца файла, kill - убивает процессы):
+   $filon@Filon:/home$ myfile=$(mktemp)
+   $filon@Filon:/home$ ls -lS > $myfile
+   $filon@Filon:/home$ ls -lS | tail -n 5
+    total 4
+    drwxr-x--- 7 filon filon 4096 Feb 21 16:20 filon
+   $filon@Filon:/home$ ping ya.ru >> $myfile &
+    [1] 288
+   $filon@Filon:/home$ tail -f "$myfile"
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=61 ttl=246 time=12.2 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=62 ttl=246 time=11.8 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=63 ttl=246 time=62.4 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=64 ttl=246 time=219 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=65 ttl=246 time=11.6 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=66 ttl=246 time=11.7 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=67 ttl=246 time=11.7 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=68 ttl=246 time=19.0 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=69 ttl=246 time=23.8 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=70 ttl=246 time=22.1 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=71 ttl=246 time=11.7 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=72 ttl=246 time=30.1 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=73 ttl=246 time=14.7 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=74 ttl=246 time=99.3 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=75 ttl=246 time=22.9 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=76 ttl=246 time=16.2 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=77 ttl=246 time=11.7 ms
+    ^C
+   $filon@Filon:/home$ kill 288
+   $filon@Filon:/home$ tail -f "$myfile"
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=74 ttl=246 time=99.3 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=75 ttl=246 time=22.9 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=76 ttl=246 time=16.2 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=77 ttl=246 time=11.7 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=78 ttl=246 time=13.9 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=79 ttl=246 time=11.6 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=80 ttl=246 time=51.1 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=81 ttl=246 time=11.9 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=82 ttl=246 time=41.0 ms
+    64 bytes from ya.ru (77.88.55.242): icmp_seq=83 ttl=246 time=25.5 ms
+    ^C
+    [1]-  Terminated              ping ya.ru >> $myfile
+   $filon@Filon:/home$ kill -9 288
+    -bash: kill: (288) - No such process
+   $filon@Filon:/home$ ps
+    PID TTY          TIME CMD
+    10 pts/0    00:00:00 bash
+    289 pts/0    00:00:00 tail
+    384 pts/0    00:00:00 ps
+   $filon@Filon:/home$ kill tail
+    -bash: kill: tail: arguments must be process or job IDs
+   $filon@Filon:/home$ kill 289
+   $filon@Filon:/home$ ps
+    PID TTY          TIME CMD
+    10 pts/0    00:00:00 bash
+    289 pts/0    00:00:00 tail
+    385 pts/0    00:00:00 ps
+   $filon@Filon:/home$ ps
+    PID TTY          TIME CMD
+    10 pts/0    00:00:00 bash
+    289 pts/0    00:00:00 tail
+    386 pts/0    00:00:00 ps
+   $filon@Filon:/home$ sudo kill -9 tail
+    [sudo] password for filon:
+    kill: failed to parse argument: 'tail'
+   $filon@Filon:/home$ ps
+    PID TTY          TIME CMD
+    10 pts/0    00:00:00 bash
+    289 pts/0    00:00:00 tail
+    390 pts/0    00:00:00 ps
+   $filon@Filon:/home$ sudo kill -9 289
+    [2]+  Killed                  tail -f
+   $filon@Filon:/home$ ps
+    PID TTY          TIME CMD
+    10 pts/0    00:00:00 bash
+    394 pts/0    00:00:00 ps
+   $filon@Filon:/home$ sudo kill -9 bash
+    kill: failed to parse argument: 'bash'
+   $filon@Filon:/home$ sudo kill -9 10
+
+head - позволяет выводить заданное количество строк с начала файла:
+   $filon@Filon:/tmp$ myfile=$(mktemp)
+   $filon@Filon:/tmp$ ls -la > $myfile
+   $filon@Filon:/tmp$ head $myfile
+    total 156
+    drwxrwxrwt  3 root  root  4096 Feb 23 14:39 .
+    drwxr-xr-x 19 root  root  4096 Feb 23 10:29 ..
+    drwxrwxrwx  2 root  root    60 Feb 23 10:29 .X11-unix
+    -rw-------  1 filon filon   36 Feb 20 21:15 tmp.1BRpSIfwFz
+    -rw-------  1 filon filon   36 Feb 20 21:25 tmp.1FNVnQypAj
+    -rw-------  1 filon filon   54 Feb 20 20:47 tmp.4EHaleVF2J
+    -rw-------  1 filon filon   36 Feb 20 21:30 tmp.4JAiMQ8iaH
+    -rw-------  1 filon filon    0 Feb 23 14:33 tmp.4Qr25PIe13
+    -rw-------  1 filon filon 2578 Feb 20 18:39 tmp.6FXy1mAfKY
+   $filon@Filon:/tmp$ head -n 2 $myfile
+    total 156
+    drwxrwxrwt  3 root  root  4096 Feb 23 14:39 .
+   $filon@Filon:/tmp$ head -c [10-40] $myfile
+    head: invalid number of bytes: ‘[10-40]’
+   $filon@Filon:/tmp$ head -c 10-40 $myfile
+    head: invalid number of bytes: ‘10-40’
+   $filon@Filon:/tmp$ head -c 10 $myfile
+    total 156
+   $filon@Filon:/tmp$ head -v -n 2 $myfile
+    ==> /tmp/tmp.6qUbe6bwDS <==
+    total 156
+    drwxrwxrwt  3 root  root  4096 Feb 23 14:39 .
+   $filon@Filon:/tmp$
+
+cmp - используется для побайтового сравнения двух текстовых или бинарных файлов:
+   $filon@Filon:~/lab20$ ls -l ~ > f1
+   $filon@Filon:~/lab20$ cat f1 > f2
+   $filon@Filon:~/lab20$ cmp f1 f2
+   $filon@Filon:~/lab20$ cmp f1 f2
+    f1 f2 differ: byte 341, line 7
+   $filon@Filon:~/lab20$ cmp -l f1 f2
+    341  40  12
+    342 163  55
+    ...........
+    728 153 150
+    729  56  12
+    cmp: EOF on f2 after byte 729
+   $filon@Filon:~/lab20$ cmp -n 2 f1 f2
+   $filon@Filon:~/lab20$ 
+   $filon@Filon:~/lab20$ cmp -s f1 f2
+   $filon@Filon:~/lab20$ 
+
+sed - предназначена  для поиска, вставки, замены и удаления фрагментов в файле:
+   $filon@Filon:~/lab20$ sed -n '1,10p' /etc/group
+    root:x:0:
+    daemon:x:1:
+    bin:x:2:
+    sys:x:3:
+    adm:x:4:syslog,filon
+    tty:x:5:
+    disk:x:6:
+    lp:x:7:
+    mail:x:8:
+    news:x:9:
+   $filon@Filon:~/lab20$ sed -n '10p' /etc/group
+    news:x:9:
+   $filon@Filon:~/lab20$ sed -n '1,5d' /etc/group
+   $filon@Filon:~/lab20$ sed '1,5d' /etc/group
+    tty:x:5:
+    disk:x:6:
+    lp:x:7:
+    mail:x:8:
+    news:x:9:
+    uucp:x:10:
+    man:x:12:
+    proxy:x:13:
+    kmem:x:15:
+    dialout:x:20:filon
+    fax:x:21:
+    voice:x:22:
+    cdrom:x:24:filon
+    floppy:x:25:filon
+    tape:x:26:
+    sudo:x:27:filon
+    audio:x:29:filon
+    dip:x:30:filon
+    www-data:x:33:
+    backup:x:34:
+    operator:x:37:
+    list:x:38:
+    irc:x:39:
+    src:x:40:
+    gnats:x:41:
+    shadow:x:42:
+    utmp:x:43:
+    video:x:44:filon
+    sasl:x:45:
+    plugdev:x:46:filon
+    staff:x:50:
+    games:x:60:
+    users:x:100:
+    nogroup:x:65534:
+    systemd-journal:x:101:
+    systemd-network:x:102:
+    systemd-resolve:x:103:
+    crontab:x:104:
+    messagebus:x:105:
+    systemd-timesync:x:106:
+    input:x:107:
+    sgx:x:108:
+    kvm:x:109:
+    render:x:110:
+    syslog:x:111:
+    uuidd:x:112:
+    tcpdump:x:113:
+    _ssh:x:114:
+    admin:x:115:
+    netdev:x:116:filon
+    filon:x:1000:
+   $filon@Filon:~/lab20$ sed -n 's/root/elel/p' /etc/group
+    elel:x:0
+   $filon@Filon:~/lab20$ sed -n '1,10 s/n/sii/gp' /etc/group
+    daemosii:x:1:
+    bisii:x:2:
+    adm:x:4:syslog,filosii
+    siiews:x:9:
+   $filon@Filon:~/lab20$
+
+mktemp - предназначена для создания временных файлов и каталогов:
+   $filon@Filon:~/lab20$ F=$(mktemp)
+   $filon@Filon:~/lab20$ echo $F
+    /tmp/tmp.trLdlJfVMi
+   $filon@Filon:~/lab20$ echo "abobabaobabaoba" > $F
+   $filon@Filon:~/lab20$ echo "$F"
+    /tmp/tmp.trLdlJfVMi
+   $filon@Filon:~/lab20$ cat $F 
+    abobabaobabaoba
+   $filon@Filon:~/lab20$ rm $F
+   $filon@Filon:~/lab20$ echo $F
+    /tmp/tmp.trLdlJfVMi
+   $filon@Filon:~/lab20$ cat $F
+    cat: /tmp/tmp.trLdlJfVMi: No such file or directory
+   $filon@Filon:~/lab20$ D=$(mktemp -d) 
+   $filon@Filon:~/lab20$ rm $D
+    rm: cannot remove '/tmp/tmp.yW5HLgj5nu': Is a directory
+   $filon@Filon:~/lab20$ rm -r $D
+   $filon@Filon:~/lab20$ ls $(dirname $D)
+    cache           tmp.6n9079aTqw  tmp.F0oDuvCh2W  tmp.NRYBoISAcf  tmp.cc3Htdbs3n  tmp.hNj1hGBXJt  tmp.pSW65YWaZQ  tmp.xG3snMrrwq
+    tmp.1BRpSIfwFz  tmp.6qUbe6bwDS  tmp.GEwWgJFy8w  tmp.Q3q9eqXet0  tmp.cwzX1BVqfO  tmp.hjYwxODYnw  tmp.rN33VVsvNp  tmp.ybB7ZzngiS
+    tmp.1FNVnQypAj  tmp.7qtH9M1K1R  tmp.HBGZ7mbP4R  tmp.QW7Dgo5G4V  tmp.eOdR0iShFT  tmp.jnjxsBS8Zu  tmp.rtITsBkmPS  tmp.z2ClAXr370
+    tmp.4EHaleVF2J  tmp.9B2ckzdb03  tmp.Iac6m3v2Md  tmp.S3hMhpoeM3  tmp.eiWKc0QGRD  tmp.khcbRw8YwN  tmp.tO4hPY7fkz
+    tmp.4JAiMQ8iaH  tmp.9gyebuPG2J  tmp.JCswkRrrDu  tmp.WfhkiRwOCt  tmp.f45W1j2TvH  tmp.lIRxuwE5dR  tmp.w8tqIJzy4A
+    tmp.4Qr25PIe13  tmp.B4TNtucrl1  tmp.LGf1tWTQBq  tmp.WgTLdUATpW  tmp.fSKLGyzCYC  tmp.lOa0AlJ16s  tmp.wCOv8hMahj
+    tmp.6FXy1mAfKY  tmp.ClJR82KGAF  tmp.LUfEQc1OFM  tmp.YMtGyxffaK  tmp.fYngrJWmQj  tmp.mWjFhK7sbO  tmp.wFlg0ZHJxk
+    tmp.6mm8VLHFVq  tmp.DUSf2u1R94  tmp.NKhfkq1Cw8  tmp.YYakUKEmDt  tmp.hLdOJSzaie  tmp.ooVr5XHZOE  tmp.wuIEaYOM9y
+   $filon@Filon:~/lab20$ cd $(dirname $D) && rm $(ls $(dirname $D))
+    rm: cannot remove 'cache': Is a directory
+   $filon@Filon:/tmp$ ls $(dirname $D)
+    cache
+
+od - предназначена для преобразования содержимого ввода в различные форматы: 
+   $filon@Filon:~/lab20$ cat test
+    firstName       lastName        age     city       ID
+
+    Thomas          Shelby          30      Rio        400
+    Omega           Night           45      Ontario    600
+    Wood            Tinker          54      Lisbon     N/A
+    Giorgos         Georgiou        35      London     300
+    Timmy           Turner          32      Berlin     N/A
+   $filon@Filon:~/lab20$ od test
+    0000000 064546 071562 047164 066541 020145 020040 020040 020040
+    0000020 060554 072163 060516 062555 020040 020040 020040 020040
+    0000040 063541 020145 020040 020040 064543 074564 020040 020040
+    0000060 020040 044440 006504 006412 052012 067550 060555 020163
+    0000100 020040 020040 020040 020040 051440 062550 061154 020171
+    0000120 020040 020040 020040 020040 031440 020060 020040 020040
+    0000140 051040 067551 020040 020040 020040 020040 030064 006460
+    0000160 047412 062555 060547 020040 020040 020040 020040 020040
+    0000200 047040 063551 072150 020040 020040 020040 020040 020040
+    0000220 032040 020065 020040 020040 047440 072156 071141 067551
+    0000240 020040 020040 030066 006460 053412 067557 020144 020040
+    0000260 020040 020040 020040 020040 052040 067151 062553 020162
+    0000300 020040 020040 020040 020040 032440 020064 020040 020040
+    0000320 046040 071551 067542 020156 020040 020040 027516 006501
+    0000340 043412 067551 063562 071557 020040 020040 020040 020040
+    0000360 043440 067545 063562 067551 020165 020040 020040 020040
+    0000400 031440 020065 020040 020040 046040 067157 067544 020156
+    0000420 020040 020040 030063 006460 052012 066551 074555 020040
+    0000440 020040 020040 020040 020040 052040 071165 062556 020162
+    0000460 020040 020040 020040 020040 031440 020062 020040 020040
+    0000500 041040 071145 064554 020156 020040 020040 027516 006501
+    0000520 000012
+    0000521
+   $filon@Filon:~/lab20$ od -c test
+    0000000   f   i   r   s   t   N   a   m   e
+    0000020   l   a   s   t   N   a   m   e
+    0000040   a   g   e                       c   i   t   y
+    0000060               I   D  \r  \n  \r  \n   T   h   o   m   a   s
+    0000100                                       S   h   e   l   b   y
+    0000120                                       3   0
+    0000140       R   i   o                                   4   0   0  \r
+    0000160  \n   O   m   e   g   a
+    0000200       N   i   g   h   t
+    0000220       4   5                           O   n   t   a   r   i   o
+    0000240                   6   0   0  \r  \n   W   o   o   d
+    0000260                                       T   i   n   k   e   r
+    0000300                                       5   4
+    0000320       L   i   s   b   o   n                       N   /   A  \r
+    0000340  \n   G   i   o   r   g   o   s
+    0000360       G   e   o   r   g   i   o   u
+    0000400       3   5                           L   o   n   d   o   n
+    0000420                   3   0   0  \r  \n   T   i   m   m   y
+    0000440                                       T   u   r   n   e   r
+    0000460                                       3   2
+    0000500       B   e   r   l   i   n                       N   /   A  \r
+    0000520  \n
+    0000521 
+
+xargs - используется для формирования списка аргументов и выполнения команды:
+   $filon@Filon:~/lab20$ echo "You know man" | xargs 
+    You know man
+   $filon@Filon:~/lab20$ cat test | xargs -L1 echo 
+    firstName lastName age city ID
+    Thomas Shelby 30 Rio 400
+    Omega Night 45 Ontario 600
+    Wood Tinker 54 Lisbon N/A
+    Giorgos Georgiou 35 London 300
+    Timmy Turner 32 Berlin N/A
+   $filon@Filon:~/lab20$ cat test | xargs -n1 echo
+    firstName
+    lastName
+    age
+    city
+    ID
+    Thomas
+    Shelby
+    30
+    Rio
+    400
+    Omega
+    Night
+    45
+    Ontario
+    600
+    Wood
+    Tinker
+    54
+    Lisbon
+    N/A
+    Giorgos
+    Georgiou
+    35
+    London
+    300
+    Timmy
+    Turner
+    32
+    Berlin
+    N/A
+   $filon@Filon:~/lab20$ cat test | xargs -n5 echo
+    firstName lastName age city ID
+    Thomas Shelby 30 Rio 400
+    Omega Night 45 Ontario 600
+    Wood Tinker 54 Lisbon N/A
+    Giorgos Georgiou 35 London 300
+    Timmy Turner 32 Berlin N/A
+   $filon@Filon:~/lab20$ cat test | xargs -L2 echo
+    Thomas Shelby 30 Rio 400ty ID
+    Wood Tinker 54 Lisbon N/A
+    Timmy Turner 32 Berlin N/A300
+   $filon@Filon:~/lab20$ ls | xargs -n4 -d - echo 
+    f1
+    f2
+    lab20.txt
+    test
+    ЛР20
+   $filon@Filon:~/lab20$ ls
+    f1  f2  lab20.txt  test  ЛР20
+   $filon@Filon:~/lab20$ ls -l | xargs -n4 -d - echo
+    total 88
+    rw r
+    r   1 filon filon   732 Feb 25 21:51 f1
+    rw
+    r  r 
+    1 filon filon   729 Feb 25 21:49 f2
+    rw r
+    r   1 filon filon 18440 Mar  3 10:50 lab20.txt
+    rw
+    r  r
+    1 filon filon   337 Mar  3 11:06 test
+    rw r
+    r   1 filon filon 55272 Mar  3 10:52 ЛР20
+
+   $filon@Filon:~/lab20$ ls -l | xargs -n4 -p -d - echo
+    echo 'total 88'$'\n' rw r ''?...n
+    echo r '' ' 1 filon filon   732 Feb 25 21:51 f1'$'\n' rw?...y
+    r   1 filon filon   732 Feb 25 21:51 f1
+    rw
+    echo r '' r ''?...n
+    echo ' 1 filon filon   729 Feb 25 21:49 f2'$'\n' rw r ''?...n
+    echo r '' ' 1 filon filon 18440 Mar  3 10:50 lab20.txt'$'\n' rw?...y
+    r   1 filon filon 18440 Mar  3 10:50 lab20.txt
+    rw
+    echo r '' r ''?...y
+    r  r 
+    echo ' 1 filon filon   337 Mar  3 11:06 test'$'\n' rw r ''?...y
+    1 filon filon   337 Mar  3 11:06 test
+    rw r
+    echo r '' ' 1 filon filon 55272 Mar  3 10:52 ЛР20'$'\n'?...y
+    r   1 filon filon 55272 Mar  3 10:52 ЛР20
+
+indent - переформатирует код C и C++ в определенном пользователем стиле отступов и стиля кодирования: 
+   $filon@Filon:~/lab20$ > c.txt
+   $filon@Filon:~/lab20$ cat c.txt
+    int main(){
+    int a, b;
+    a=1000;
+    b=7;
+    c=a-b;
+    printf("%d", c);
+    return 777;
+    }filon@Filon:~/lab20$ cat c.txt
+    int main(){
+    int a, b;
+    a=1000;
+    b=7;
+    c=a-b;
+    printf("%d", c);
+    return 777;
+    }
+   $filon@Filon:~/lab20$ indent -kr c.txt
+   $filon@Filon:~/lab20$ cat c.txt
+    int main()
+    {
+    int a, b;
+    a = 1000;
+    b = 7;
+    c = a - b;
+    printf("%d", c);
+    return 777;
+    }
+
+   $filon@Filon:~/lab20$ indent -prs c.txt
+   $filon@Filon:~/lab20$ cat c.txt
+    int
+    main (  )
+    {
+    int a, b;
+    a = 1000;
+    b = 7;
+    c = a - b;
+    printf ( "%d", c );
+    return 777;
+    }
+
+tee - нужна для записи вывода любой команды в один или несколько файлов:
+   $quibex@STARK:~/labs/lab20$ grep "5" test | tee test5 5test 5test5
+    Omega           Night           45      Ontario    600
+    Wood            Tinker          54      Lisbon     N/A
+    Giorgos         Georgiou        35      London     300   
+   $quibex@STARK:~/labs/lab20$ cat 5test
+    Omega           Night           45      Ontario    600
+    Wood            Tinker          54      Lisbon     N/A
+    Giorgos         Georgiou        35      London     300
+
+iconv - служит для переконвертирования файлов из одной кодировки в другую:
+   $quibex@STARK:~/labs/lab20$ iconv -f UTF-8 -t UTF-16 test5
+    ��Omega           Night           45      Ontario    600
+    Wood            Tinker          54      Lisbon     N/A
+    Giorgos         Georgiou        35      London     300   
+   $quibex@STARK:~/labs/lab20$ iconv -f UTF-8 -t CP1251 test5
+    Omega           Night           45      Ontario    600
+    Wood            Tinker          54      Lisbon     N/A
+    Giorgos         Georgiou        35      London     300   
+   $quibex@STARK:~/labs/lab20$ iconv -f UTF-8 -t CP1251 test5 -o outtest5   
+   $quibex@STARK:~/labs/lab20$ cat outtest5 
+    Omega           Night           45      Ontario    600
+    Wood            Tinker          54      Lisbon     N/A
+    Giorgos         Georgiou        35      London     300
+
+file - узнать подробности про файл:
+   $quibex@STARK:~/labs/lab20$ file test5
+    test5: ASCII text, with CRLF line terminators   
+   $quibex@STARK:~/labs/lab20$ file outtest5
+    outtest5: ASCII text, with CRLF line terminators   
+   $quibex@STARK:~/labs/lab20$ file -b outtest5
+    ASCII text, with CRLF line terminators   
+   $quibex@STARK:~/labs/lab20$ file -i outtest5
+    outtest5: text/plain; charset=us-ascii
+
+df - позволяет выводить не только список подключенных устройств, но и информацию о занятом месте, а также точку монтирования:
+   $quibex@STARK:~/labs/lab20$ df -h
+    Filesystem      Size  Used Avail Use% Mounted on
+    /dev/sdc        251G  1.5G  237G   1% /
+    none            3.8G   28K  3.8G   1% /mnt/wslg
+    none            3.8G  4.0K  3.8G   1% /mnt/wsl
+    tools           342G   62G  280G  19% /init
+    none            3.8G     0  3.8G   0% /run
+    none            3.8G     0  3.8G   0% /run/lock
+    none            3.8G     0  3.8G   0% /run/shm
+    none            3.8G     0  3.8G   0% /run/user
+    tmpfs           3.8G     0  3.8G   0% /sys/fs/cgroup
+    drivers         342G   62G  280G  19% /usr/lib/wsl/drivers
+    lib             342G   62G  280G  19% /usr/lib/wsl/lib
+    none            3.8G   76K  3.8G   1% /mnt/wslg/versions.txt
+    none            3.8G   76K  3.8G   1% /mnt/wslg/doc
+    drvfs           342G   62G  280G  19% /mnt/c
+    drvfs           120G   97M  120G   1% /mnt/d   
+   $quibex@STARK:~/labs/lab20$ df -h dev
+    df: dev: No such file or directory   
+   $quibex@STARK:~/labs/lab20$ df -h /dev
+    Filesystem      Size  Used Avail Use% Mounted on
+    none            3.8G     0  3.8G   0% /dev   
+
+split - предназначена для разбиения одного большого файла на несколько маленьких:
+   $quibex@STARK:~/labs/lab20$ split -l 2 test   
+   $quibex@STARK:~/labs/lab20$ ls
+    5test   c.txt:Zone.Identifier   f1                  f2:Zone.Identifier         outtest5  test:Zone.Identifier  xac   ЛР20:Zone.Identifier       
+    5test5  c.txt~                  f1:Zone.Identifier  lab20.txt                  test      xaa                   xad
+    c.txt   c.txt~:Zone.Identifier  f2                  lab20.txt:Zone.Identifier  test5     xab                   ЛР20  $quibex@STARK:~/labs/lab20$ cat xaa 
+    firstName       lastName        age     city       ID
+   $quibex@STARK:~/labs/lab20$ cat xab
+    Thomas          Shelby          30      Rio        400
+    Omega           Night           45      Ontario    600   
+   $quibex@STARK:~/labs/lab20$ split -n 2 test   
+   $quibex@STARK:~/labs/lab20$ cat xaa 
+    firstName       lastName        age     city       ID
+
+    Thomas          Shelby          30      Rio        400   
+   $quibex@STARK:~/labs/lab20$      45      Ontario    600   
+   $quibex@STARK:~/labs/lab20$ cat xaa 
+    firstName       lastName        age     city       ID
+
+    Thomas          Shelby          30      Rio        400   
+   $quibex@STARK:~/labs/lab20$      45      Ontario    600   
+   $quibex@STARK:~/labs/lab20$ split -b 10 test   
+   $quibex@STARK:~/labs/lab20$ ls
+    5test                   f1                         outtest5              xac  xai  xao  xau  xba  xbg
+    5test5                  f1:Zone.Identifier         test                  xad  xaj  xap  xav  xbb  xbh
+    c.txt                   f2                         test5                 xae  xak  xaq  xaw  xbc  ЛР20
+    c.txt:Zone.Identifier   f2:Zone.Identifier         test:Zone.Identifier  xaf  xal  xar  xax  xbd  ЛР20:Zone.Identifier
+    c.txt~                  lab20.txt                  xaa                   xag  xam  xas  xay  xbe
+    c.txt~:Zone.Identifier  lab20.txt:Zone.Identifier  xab                   xah  xan  xat  xaz  xbf
+   
+wc - предназначена для подсчета количества строк или слов в тексте:
+   $quibex@STARK:~/labs/lab20$ ls -la | wc 
+    55     488    2857   
+   $quibex@STARK:~/labs/lab20$ ls -lS | wc
+    53     470    2760   
+   $quibex@STARK:~/labs/lab20$
+
+cut - используется, если нужно вырезать часть текста:
+   $quibex@STARK:~/labs/lab20$ ls -lS ../lab21/files | grep "lab" | cut -d ' ' -f 9
+    18:40
+    Mar
+    Mar
+    Mar
+    Mar
+    Mar
+    772
+    731
+    290
+    181
+   $quibex@STARK:~/labs/lab20$ ls -lS ../lab21/files | grep "lab" | cut -b 49-60
+    lab_14.jpg
+    lab11.c
+    lab13 — к
+    lab13.c
+    lab15.c
+    lab14.c
+    lab9.cpp
+    lab_12.c
+    lab10.c
+    lab8.c
+
+sort - предназначена для сортировки строк: 
+   $quibex@STARK:~/labs/lab20$ ls -lS ../lab21/files | grep "lab" | sort 
+    -rw-r--r-- 1 quibex quibex     181 Mar  6 18:40 lab8.c
+    -rw-r--r-- 1 quibex quibex     290 Mar  6 18:40 lab10.c
+    -rw-r--r-- 1 quibex quibex     731 Mar  6 18:40 lab_12.c
+    -rw-r--r-- 1 quibex quibex     772 Mar  6 18:40 lab9.cpp
+    -rw-r--r-- 1 quibex quibex    1162 Mar  6 18:40 lab14.c
+    -rw-r--r-- 1 quibex quibex    2116 Mar  6 18:40 lab15.c
+    -rw-r--r-- 1 quibex quibex    2256 Mar  6 18:40 lab13 — копия.c
+    -rw-r--r-- 1 quibex quibex    2256 Mar  6 18:40 lab13.c
+    -rw-r--r-- 1 quibex quibex    5985 Mar  6 18:40 lab11.c
+    -rw-r--r-- 1 quibex quibex 2658964 Mar  6 18:40 lab_14.jpg
+   $quibex@STARK:~/labs/lab20$ ls -lS ../lab21/files | grep "lab"
+    -rw-r--r-- 1 quibex quibex 2658964 Mar  6 18:40 lab_14.jpg
+    -rw-r--r-- 1 quibex quibex    5985 Mar  6 18:40 lab11.c
+    -rw-r--r-- 1 quibex quibex    2256 Mar  6 18:40 lab13 — копия.c
+    -rw-r--r-- 1 quibex quibex    2256 Mar  6 18:40 lab13.c
+    -rw-r--r-- 1 quibex quibex    2116 Mar  6 18:40 lab15.c
+    -rw-r--r-- 1 quibex quibex    1162 Mar  6 18:40 lab14.c
+    -rw-r--r-- 1 quibex quibex     772 Mar  6 18:40 lab9.cpp
+    -rw-r--r-- 1 quibex quibex     731 Mar  6 18:40 lab_12.c
+    -rw-r--r-- 1 quibex quibex     290 Mar  6 18:40 lab10.c
+    -rw-r--r-- 1 quibex quibex     181 Mar  6 18:40 lab8.c
+   $quibex@STARK:~/labs/lab20$ ls -l ../lab21/files | grep "lab" | sort -r
+    -rw-r--r-- 1 quibex quibex 2658964 Mar  6 18:40 lab_14.jpg
+    -rw-r--r-- 1 quibex quibex    5985 Mar  6 18:40 lab11.c
+    -rw-r--r-- 1 quibex quibex    2256 Mar  6 18:40 lab13.c
+    -rw-r--r-- 1 quibex quibex    2256 Mar  6 18:40 lab13 — копия.c
+    -rw-r--r-- 1 quibex quibex    2116 Mar  6 18:40 lab15.c
+    -rw-r--r-- 1 quibex quibex    1162 Mar  6 18:40 lab14.c
+    -rw-r--r-- 1 quibex quibex     772 Mar  6 18:40 lab9.cpp
+    -rw-r--r-- 1 quibex quibex     731 Mar  6 18:40 lab_12.c
+    -rw-r--r-- 1 quibex quibex     290 Mar  6 18:40 lab10.c
+    -rw-r--r-- 1 quibex quibex     181 Mar  6 18:40 lab8.c
+
+diff - предназначена для сравнения файлов:
+   $quibex@STARK:~/labs/lab20$ cat xar
+	tar
+	gar
+	var
+	xer
+	quibex@STARK:~/labs/lab20$ cat xbr
+	tar
+	var
+	dir
+	xer
+	ver
+	jer
+	quibex@STARK:~/labs/lab20$ diff xar xbr
+	2d1
+	< gar
+	3a3
+	> dir
+	4a5,6
+	> ver
+	> jer 
+
+comm -  используется для сравнения двух текстовых файлов с отсортированными по алфавиту строками:
+   $quibex@STARK:~/labs/lab20$ cat xar
+	dir
+	gar
+	var
+	xer
+	quibex@STARK:~/labs/lab20$ cat xbr
+	aar
+	bar
+	dir
+	ver
+	xer
+	xez
+	quibex@STARK:~/labs/lab20$ comm xar xbr
+		aar
+		bar
+			dir
+	gar
+	var
+		ver
+			xer
+		xe
+
+sum - используется для поиска контрольной суммы и подсчета блоков в файле:
+   $quibex@STARK:~/labs/lab20$ sum *.txt
+    53878     1 c.txt
+    16609    39 lab20.txt
+
