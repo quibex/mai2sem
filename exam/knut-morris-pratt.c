@@ -4,10 +4,6 @@ void build_pref_func(char *s, int *p, int n){
     p[0] = 0;
     for (int i = 1; i < n; i++){
         int j = p[i-1];
-        // if (s[j] == s[i]){
-        //     p[i] == j+1;
-        //     continue;
-        // }
         while ((j > 0) && (s[j] != s[i])){
             j = p[j-1];
         }
